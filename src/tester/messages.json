@@ -1,0 +1,13 @@
+{
+  "patient_in_feasible_operating_room": "Los pacientes son intervenidos en quirofanos adecuados a sus tipos de intervenciones: {}",
+  "no_overlap_patients_in_same_operating_room": "No hay solapamientos de pacientes en un mismo quirofano: {}",
+  "no_overlap_operating_and_cleaning_in_same_operating_room": "No hay solapamientos de limpiezas e intervenciones en un mismo quirofano: {}",
+  "operations_in_allowed_shift": "Las intervenciones quirurgicas se realizan dentro del horario permitido: {}",
+  "time_in_urpa_room": "Se respeta el tiempo de reanimacion en una box de URPA: {}",
+  "maximum_waiting_in_urpa_room": "No se sobrepasa el tiempo maximo de espera en una box de URPA: {}",
+  "uce_in_allowed_shift": "Las recuperaciones en las habitaciones de UCE se realizan dentro del horario permitido: {}",
+  "no_exceed_capacity_uce_room": "No se exceden las capacidades de las habitaciones de UCE: {}",
+  "no_mixed_sex_in_uce_room": "Pacientes de sexos diferentes no comparten habitacion de UCE: {}",
+  "value_sol": "Valor de la solucion dado {} es igual a {}: {}",
+  "maximum_cpu_time": "Se respeta el tiempo maximo de resolucion: {}"
+}
