@@ -131,8 +131,7 @@ class Solution:
             if len(assignments) > 0:
                 assignments.sort(key=lambda x: x.uce_interval.lower)
                 self.assign(assignments[0])
-            # else:
-            #     print(patient, patient.surgical_type, available_ors, available_uces)
+
 
     def find_available_ors(
         self, patient: Patient
