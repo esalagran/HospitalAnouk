@@ -146,7 +146,6 @@ class Solution:
                 )
                 if inter.contains(operating_interval):
                     available_ors.append((operating_room, inter))
-        available_ors.sort(key=lambda x: x[1].lower)
         return available_ors
 
     def find_available_uces(self, patient: Patient) -> List[Tuple[UceRoom, P.Interval]]:
@@ -159,5 +158,4 @@ class Solution:
                 )
                 if inter.contains(uce_time_interval):
                     available_uces.append((uce_room, inter))
-        available_uces.sort(key=lambda x: x[1].lower)
         return available_uces
