@@ -18,7 +18,7 @@ def read_file(path: Path) -> Instance:
     file = open(path, "r")
     # Read the content of the file...
     # ...patients
-    NP = int(file.readline())
+    _ = int(file.readline())
     PPr = _parse(file.readline())
     PSe = _parse(file.readline())
     PTi = _parse(file.readline())
@@ -44,7 +44,6 @@ def read_file(path: Path) -> Instance:
         for id_p, (pr, sex, st) in enumerate(zip(PPr, PSe, PTi), start=1)
     ]
     operating_rooms = [
-        OperatingRoom(id_or=id_or, surgical_type=dict_surgical_types_by_id[st])
-        for id_or, st in enumerate(QTI, start=1)
+        OperatingRoom(id_or=id_or, surgical_type=dict_surgical_types_by_id[st]) for id_or, st in enumerate(QTI, start=1)
     ]
     return Instance(patients=patients, operating_rooms=operating_rooms)

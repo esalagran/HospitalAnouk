@@ -9,7 +9,7 @@ from sys import version_info
 from .sortedlist import SortedList, recursive_repr
 
 if version_info[0] == 2:
-    from itertools import izip as zip
+    pass
 
 
 class SortedSet(MutableSet, Sequence):

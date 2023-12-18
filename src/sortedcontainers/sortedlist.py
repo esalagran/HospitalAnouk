@@ -113,10 +113,7 @@ class SortedList(MutableSequence):
         values = sorted(iterable)
 
         if self._maxes is None and len(values) > 0:
-            self._lists = [
-                values[pos : (pos + self._load)]
-                for pos in range(0, len(values), self._load)
-            ]
+            self._lists = [values[pos : (pos + self._load)] for pos in range(0, len(values), self._load)]
             self._maxes = [sublist[-1] for sublist in self._lists]
             self._len = len(values)
             del self._index[:]
@@ -400,9 +397,7 @@ class SortedList(MutableSequence):
                 if len(value) != len(indices):
                     raise ValueError(
                         "attempt to assign sequence of size {0}"
-                        " to extended slice of size {1}".format(
-                            len(value), len(indices)
-                        )
+                        " to extended slice of size {1}".format(len(value), len(indices))
                     )
 
                 # Keep a log of values that are set so that we can
@@ -438,9 +433,7 @@ class SortedList(MutableSequence):
 
                 # Check that the given values are ordered properly.
 
-                ordered = all(
-                    value[pos - 1] <= value[pos] for pos in range(1, len(value))
-                )
+                ordered = all(value[pos - 1] <= value[pos] for pos in range(1, len(value)))
 
                 if not ordered:
                     raise ValueError
@@ -678,14 +671,14 @@ class SortedList(MutableSequence):
         if self._maxes is None:
             raise ValueError
 
-        if start == None:
+        if start is None:
             start = 0
         if start < 0:
             start += self._len
         if start < 0:
             start = 0
 
-        if stop == None:
+        if stop is None:
             stop = self._len
         if stop < 0:
             stop += self._len
@@ -752,39 +745,27 @@ class SortedList(MutableSequence):
 
     def __eq__(self, that):
         """Compare two iterables for equality."""
-        return (self._len == len(that)) and all(
-            lhs == rhs for lhs, rhs in zip(self, that)
-        )
+        return (self._len == len(that)) and all(lhs == rhs for lhs, rhs in zip(self, that))
 
     def __ne__(self, that):
         """Compare two iterables for inequality."""
-        return (self._len != len(that)) or any(
-            lhs != rhs for lhs, rhs in zip(self, that)
-        )
+        return (self._len != len(that)) or any(lhs != rhs for lhs, rhs in zip(self, that))
 
     def __lt__(self, that):
         """Compare two iterables for less than."""
-        return (self._len <= len(that)) and all(
-            lhs < rhs for lhs, rhs in zip(self, that)
-        )
+        return (self._len <= len(that)) and all(lhs < rhs for lhs, rhs in zip(self, that))
 
     def __le__(self, that):
         """Compare two iterables for less than equal."""
-        return (self._len <= len(that)) and all(
-            lhs <= rhs for lhs, rhs in zip(self, that)
-        )
+        return (self._len <= len(that)) and all(lhs <= rhs for lhs, rhs in zip(self, that))
 
     def __gt__(self, that):
         """Compare two iterables for greater than."""
-        return (self._len >= len(that)) and all(
-            lhs > rhs for lhs, rhs in zip(self, that)
-        )
+        return (self._len >= len(that)) and all(lhs > rhs for lhs, rhs in zip(self, that))
 
     def __ge__(self, that):
         """Compare two iterables for greater than equal."""
-        return (self._len >= len(that)) and all(
-            lhs >= rhs for lhs, rhs in zip(self, that)
-        )
+        return (self._len >= len(that)) and all(lhs >= rhs for lhs, rhs in zip(self, that))
 
     @recursive_repr
     def __repr__(self):
@@ -809,11 +790,7 @@ class SortedList(MutableSequence):
 
             # Check all sublists are sorted.
 
-            assert all(
-                sublist[pos - 1] <= sublist[pos]
-                for sublist in self._lists
-                for pos in range(1, len(sublist))
-            )
+            assert all(sublist[pos - 1] <= sublist[pos] for sublist in self._lists for pos in range(1, len(sublist)))
 
             # Check beginning/end of sublists are sorted.
 
@@ -826,10 +803,7 @@ class SortedList(MutableSequence):
 
             # Check _maxes is a map of _lists.
 
-            assert all(
-                self._maxes[pos] == self._lists[pos][-1]
-                for pos in range(len(self._maxes))
-            )
+            assert all(self._maxes[pos] == self._lists[pos][-1] for pos in range(len(self._maxes)))
 
             # Check load level is less than _twice.
 
@@ -838,10 +812,7 @@ class SortedList(MutableSequence):
             # Check load level is greater than _half for all
             # but the last sublist.
 
-            assert all(
-                len(self._lists[pos]) >= self._half
-                for pos in range(0, len(self._lists) - 1)
-            )
+            assert all(len(self._lists[pos]) >= self._half for pos in range(0, len(self._lists) - 1))
 
             # Check length.
 
@@ -851,13 +822,8 @@ class SortedList(MutableSequence):
 
             cumulative_sum_len = [len(self._lists[0])]
             for pos in range(1, len(self._index)):
-                cumulative_sum_len.append(
-                    cumulative_sum_len[-1] + len(self._lists[pos])
-                )
-            assert all(
-                (self._index[pos] == cumulative_sum_len[pos])
-                for pos in range(len(self._index))
-            )
+                cumulative_sum_len.append(cumulative_sum_len[-1] + len(self._lists[pos]))
+            assert all((self._index[pos] == cumulative_sum_len[pos]) for pos in range(len(self._index)))
 
         except AssertionError:
             import sys

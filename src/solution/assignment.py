@@ -20,14 +20,10 @@ class Assignment:
         )
         self.operation_cleaning_interval: P.interval = P.closedopen(
             operation_start,
-            operation_start
-            + patient.surgical_type.operation_time
-            + patient.surgical_type.cleaning_time,
+            operation_start + patient.surgical_type.operation_time + patient.surgical_type.cleaning_time,
         )
         self.uce_room: UceRoom = uce_room
-        self.uce_interval: P.interval = P.closedopen(
-            uce_start, uce_start + patient.surgical_type.uce_time
-        )
+        self.uce_interval: P.interval = P.closedopen(uce_start, uce_start + patient.surgical_type.uce_time)
 
     @property
     def urpa_interval(self) -> P.Interval:
@@ -39,6 +35,4 @@ class Assignment:
 
     @property
     def waiting_time(self) -> int:
-        return self.uce_interval.lower - (
-            self.operation_interval.upper + self.patient.surgical_type.urpa_time
-        )
+        return self.uce_interval.lower - (self.operation_interval.upper + self.patient.surgical_type.urpa_time)

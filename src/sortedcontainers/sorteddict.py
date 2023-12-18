@@ -127,15 +127,11 @@ class SortedDict(MutableMapping):
 
     def __eq__(self, that):
         """Compare two iterables for equality."""
-        return len(self._dict) == len(that) and all(
-            (key in that) and (self[key] == that[key]) for key in self
-        )
+        return len(self._dict) == len(that) and all((key in that) and (self[key] == that[key]) for key in self)
 
     def __ne__(self, that):
         """Compare two iterables for inequality."""
-        return len(self._dict) != len(that) or any(
-            (key not in that) or (self[key] != that[key]) for key in self
-        )
+        return len(self._dict) != len(that) or any((key not in that) or (self[key] != that[key]) for key in self)
 
     def __iter__(self):
         """Create an iterator over the sorted keys of the dictionary."""
@@ -363,9 +359,7 @@ class SortedDict(MutableMapping):
     @recursive_repr
     def __repr__(self):
         _dict = self._dict
-        items = ", ".join(
-            "{0}: {1}".format(repr(key), repr(_dict[key])) for key in self._list
-        )
+        items = ", ".join("{0}: {1}".format(repr(key), repr(_dict[key])) for key in self._list)
         return "{0}({{{1}}})".format(self.__class__.__name__, items)
 
     def _check(self):

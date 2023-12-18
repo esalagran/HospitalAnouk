@@ -25,15 +25,8 @@ class Result:
     def __str__(self) -> str:
         result_str = ""
         for improvement in self.improvements[:-1]:
-            result_str += (
-                str(improvement.of) + _SEPARATOR_ + str(improvement.cpu_time) + "\n"
-            )
+            result_str += str(improvement.of) + _SEPARATOR_ + str(improvement.cpu_time) + "\n"
         result_str += str(len(self.improvements) - 2) + "\n"
-        result_str += (
-            str(self.improvements[-1].of)
-            + _SEPARATOR_
-            + str(self.improvements[-1].cpu_time)
-            + "\n"
-        )
+        result_str += str(self.improvements[-1].of) + _SEPARATOR_ + str(self.improvements[-1].cpu_time) + "\n"
         result_str += str(self.best_sol)
         return result_str

@@ -62,30 +62,18 @@ class Interval:
                 if self.__class__._mergeable(current, successor):
                     if current.lower == successor.lower:
                         lower = current.lower
-                        left = (
-                            current.left
-                            if current.left == Bound.CLOSED
-                            else successor.left
-                        )
+                        left = current.left if current.left == Bound.CLOSED else successor.left
 
                     else:
                         lower = min(current.lower, successor.lower)
-                        left = (
-                            current.left if lower == current.lower else successor.left
-                        )
+                        left = current.left if lower == current.lower else successor.left
 
                     if current.upper == successor.upper:
                         upper = current.upper
-                        right = (
-                            current.right
-                            if current.right == Bound.CLOSED
-                            else successor.right
-                        )
+                        right = current.right if current.right == Bound.CLOSED else successor.right
                     else:
                         upper = max(current.upper, successor.upper)
-                        right = (
-                            current.right if upper == current.upper else successor.right
-                        )
+                        right = current.right if upper == current.upper else successor.right
 
                     union = Atomic(left, lower, upper, right)
                     self._intervals.pop(i)  # pop current
@@ -109,9 +97,7 @@ class Interval:
 
         instance = cls()
         # Check for non-emptiness (otherwise keep instance._intervals = [])
-        if lower < upper or (
-            lower == upper and left == Bound.CLOSED and right == Bound.CLOSED
-        ):
+        if lower < upper or (lower == upper and left == Bound.CLOSED and right == Bound.CLOSED):
             instance._intervals = [Atomic(left, lower, upper, right)]
         return instance
 
@@ -196,9 +182,7 @@ class Interval:
         """
         return self.__class__.from_atomic(self.left, self.lower, self.upper, self.right)
 
-    def replace(
-        self, left=None, lower=None, upper=None, right=None, *, ignore_inf=True
-    ):
+    def replace(self, left=None, lower=None, upper=None, right=None, *, ignore_inf=True):
         """
         Create a new interval based on the current one and the provided values.
 
@@ -282,9 +266,7 @@ class Interval:
             elif isinstance(value, tuple):
                 intervals.append(self.__class__.from_atomic(*value))
             else:
-                raise TypeError(
-                    "Unsupported return type {} for {}".format(type(value), value)
-                )
+                raise TypeError("Unsupported return type {} for {}".format(type(value), value))
 
         return self.__class__(*intervals)
 
@@ -399,9 +381,7 @@ class Interval:
 
     def __getitem__(self, item):
         if isinstance(item, slice):
-            return self.__class__(
-                *[self.__class__.from_atomic(*i) for i in self._intervals[item]]
-            )
+            return self.__class__(*[self.__class__.from_atomic(*i) for i in self._intervals[item]])
         else:
             return self.__class__.from_atomic(*self._intervals[item])
 
@@ -471,12 +451,10 @@ class Interval:
                 return False
             elif self.atomic:
                 left = item.lower > self.lower or (
-                    item.lower == self.lower
-                    and (item.left == self.left or self.left == Bound.CLOSED)
+                    item.lower == self.lower and (item.left == self.left or self.left == Bound.CLOSED)
                 )
                 right = item.upper < self.upper or (
-                    item.upper == self.upper
-                    and (item.right == self.right or self.right == Bound.CLOSED)
+                    item.upper == self.upper and (item.right == self.right or self.right == Bound.CLOSED)
                 )
                 return left and right
             else:
@@ -501,9 +479,7 @@ class Interval:
 
             for i in self._intervals:
                 left = (item >= i.lower) if i.left == Bound.CLOSED else (item > i.lower)
-                right = (
-                    (item <= i.upper) if i.right == Bound.CLOSED else (item < i.upper)
-                )
+                right = (item <= i.upper) if i.right == Bound.CLOSED else (item < i.upper)
                 if left and right:
                     return True
             return False
@@ -515,9 +491,7 @@ class Interval:
         ]
 
         for i, j in zip(self._intervals[:-1], self._intervals[1:]):
-            complements.append(
-                self.__class__.from_atomic(~i.right, i.upper, j.lower, ~j.left)
-            )
+            complements.append(self.__class__.from_atomic(~i.right, i.upper, j.lower, ~j.left))
 
         return self.__class__(*complements)
 
@@ -533,12 +507,7 @@ class Interval:
                 return False
 
             for a, b in zip(self._intervals, other._intervals):
-                eq = (
-                    a.left == b.left
-                    and a.lower == b.lower
-                    and a.upper == b.upper
-                    and a.right == b.right
-                )
+                eq = a.left == b.left and a.lower == b.lower and a.upper == b.upper and a.right == b.right
                 if not eq:
                     return False
             return True
@@ -559,9 +528,7 @@ class Interval:
                 "Comparing an interval and a value is deprecated. Convert value to singleton first.",
                 DeprecationWarning,
             )
-            return not self.empty and (
-                self.upper < other or (self.right == Bound.OPEN and self.upper == other)
-            )
+            return not self.empty and (self.upper < other or (self.right == Bound.OPEN and self.upper == other))
 
     def __gt__(self, other):
         if isinstance(other, Interval):
@@ -577,9 +544,7 @@ class Interval:
                 "Comparing an interval and a value is deprecated. Convert value to singleton first.",
                 DeprecationWarning,
             )
-            return not self.empty and (
-                self.lower > other or (self.left == Bound.OPEN and self.lower == other)
-            )
+            return not self.empty and (self.lower > other or (self.left == Bound.OPEN and self.lower == other))
 
     def __le__(self, other):
         if isinstance(other, Interval):

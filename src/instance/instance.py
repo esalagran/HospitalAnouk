@@ -19,9 +19,7 @@ _UCE_NUMBER_DAYS_OPEN_ = 6
 def _calculate_operation_interval() -> P.Interval:
     interval = P.empty()
     for day in range(_OPERATING_NUMBER_DAYS_OPEN):
-        interval = interval | P.closedopen(
-            _OPERATING_HOUR_OPEN_ + 24 * day, _OPERATING_HOUR_CLOSE_ + 24 * day
-        )
+        interval = interval | P.closedopen(_OPERATING_HOUR_OPEN_ + 24 * day, _OPERATING_HOUR_CLOSE_ + 24 * day)
     return interval
 
 
@@ -30,28 +28,14 @@ class Instance:
         self.patients = patients
         self.operating_rooms = operating_rooms
         self.operation_interval = _calculate_operation_interval()
-        self.uce_rooms = [
-            UceRoom(id_uce=id_uce) for id_uce in range(1, _UCE_ROOMS_ + 1)
-        ]
-        self.uce_interval = P.closedopen(
-            _UCE_HOUR_OPEN_, _UCE_HOUR_OPEN_ + 24 * _UCE_NUMBER_DAYS_OPEN_
-        )
+        self.uce_rooms = [UceRoom(id_uce=id_uce) for id_uce in range(1, _UCE_ROOMS_ + 1)]
+        self.uce_interval = P.closedopen(_UCE_HOUR_OPEN_, _UCE_HOUR_OPEN_ + 24 * _UCE_NUMBER_DAYS_OPEN_)
 
     def operable_patients(self) -> List[Patient]:
-        set_available_surgical_types = set(
-            room.surgical_type for room in self.operating_rooms
-        )
-        patients = [
-            patient
-            for patient in self.patients
-            if patient.surgical_type in set_available_surgical_types
-        ]
+        set_available_surgical_types = set(room.surgical_type for room in self.operating_rooms)
+        patients = [patient for patient in self.patients if patient.surgical_type in set_available_surgical_types]
         return patients
 
     def feasible_operating_rooms(self, patient: Patient) -> List[OperatingRoom]:
-        rooms = [
-            room
-            for room in self.operating_rooms
-            if room.surgical_type == patient.surgical_type
-        ]
+        rooms = [room for room in self.operating_rooms if room.surgical_type == patient.surgical_type]
         return rooms

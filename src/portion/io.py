@@ -44,9 +44,7 @@ def from_string(
 
     re_left_boundary = r"(?P<left>{}|{})".format(left_open, left_closed)
     re_right_boundary = r"(?P<right>{}|{})".format(right_open, right_closed)
-    re_bounds = r"(?P<lower>{bound})({sep}(?P<upper>{bound}))?".format(
-        bound=bound, sep=sep
-    )
+    re_bounds = r"(?P<lower>{bound})({sep}(?P<upper>{bound}))?".format(bound=bound, sep=sep)
     re_interval = r"{}(|{}){}".format(re_left_boundary, re_bounds, re_right_boundary)
 
     intervals = []
@@ -69,12 +67,8 @@ def from_string(
         # Parse atomic interval
         group = match.groupdict()
 
-        left = (
-            Bound.CLOSED if re.match(left_closed + "$", group["left"]) else Bound.OPEN
-        )
-        right = (
-            Bound.CLOSED if re.match(right_closed + "$", group["right"]) else Bound.OPEN
-        )
+        left = Bound.CLOSED if re.match(left_closed + "$", group["left"]) else Bound.OPEN
+        right = Bound.CLOSED if re.match(right_closed + "$", group["right"]) else Bound.OPEN
         lower = group.get("lower", None)
         upper = group.get("upper", None)
         lower = _convert(lower) if lower is not None else inf
@@ -151,9 +145,7 @@ def to_string(
     return disj.join(exported_intervals)
 
 
-def from_data(
-    data, conv=None, *, pinf=float("inf"), ninf=float("-inf"), klass=Interval
-):
+def from_data(data, conv=None, *, pinf=float("inf"), ninf=float("-inf"), klass=Interval):
     """
     Import an interval from a piece of data.
 

@@ -13,9 +13,7 @@ def partial(wrapped, *args, **kwargs):
     Convenient helper that combines functools.update_wrapper and
     functools.partial. It has exactly the same signature as functools.partial.
     """
-    return functools.update_wrapper(
-        functools.partial(wrapped, *args, **kwargs), wrapped
-    )
+    return functools.update_wrapper(functools.partial(wrapped, *args, **kwargs), wrapped)
 
 
 def create_api(interval, *, interval_dict=None, name=None):
@@ -62,9 +60,7 @@ def create_api(interval, *, interval_dict=None, name=None):
         "IntervalDict": interval_dict,
     }
 
-    module = importlib.util.module_from_spec(
-        importlib.machinery.ModuleSpec(module_name, None)
-    )
+    module = importlib.util.module_from_spec(importlib.machinery.ModuleSpec(module_name, None))
 
     module.__all__ = list(objects.keys())
     for name, obj in objects.items():

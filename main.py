@@ -20,9 +20,7 @@ def find_result(path_input: Path, path_output: Path) -> Tuple[float, float]:
         solution = Solution(instance)
         solution.find_solution(heuristic)
         if result.best_sol is None or result.best_sol.value() < solution.value():
-            result.add_improvement(
-                solution.value(), (datetime.now() - cpu_time).seconds
-            )
+            result.add_improvement(solution.value(), (datetime.now() - cpu_time).seconds)
             result.add_best(solution)
 
     assert result.best_sol is not None

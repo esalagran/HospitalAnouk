@@ -16,9 +16,7 @@ class FormatException(Exception):
 def read_file(path: Path, instance: Instance) -> Result:
     # Dictionaries of patients, operating rooms and uce rooms by id
     dict_patients = {patient.id: patient for patient in instance.patients}
-    dict_operating_rooms = {
-        operating_room.id: operating_room for operating_room in instance.operating_rooms
-    }
+    dict_operating_rooms = {operating_room.id: operating_room for operating_room in instance.operating_rooms}
     dict_uce_rooms = {uce_room.id: uce_room for uce_room in instance.uce_rooms}
     # Read the content of the file
     with open(path, "r") as f:
@@ -26,35 +24,21 @@ def read_file(path: Path, instance: Instance) -> Result:
     # Construct the result with improvements and the solution...
     res = Result()
     # ...improvements
-    idx_number_improvements = next(
-        idx for idx, line in enumerate(lines) if _SEPARATOR_ not in line
-    )
+    idx_number_improvements = next(idx for idx, line in enumerate(lines) if _SEPARATOR_ not in line)
     for line in lines[:idx_number_improvements]:
         values = _get_float_values(text=line, expected_size_list=2)
         res.add_improvement(of=values[0], cpu_time=values[1])
     # ...best improvement
-    values = _get_float_values(
-        text=lines[idx_number_improvements + 1], expected_size_list=2
-    )
+    values = _get_float_values(text=lines[idx_number_improvements + 1], expected_size_list=2)
     res.add_improvement(of=values[0], cpu_time=values[1])
     # ...solution
     sol = Solution(instance=instance)
     ntpo = len(lines[idx_number_improvements + 2].split(_SEPARATOR_))
-    values_patient_ids = _get_int_values(
-        text=lines[idx_number_improvements + 2], expected_size_list=ntpo
-    )
-    values_operating_room_ids = _get_int_values(
-        text=lines[idx_number_improvements + 3], expected_size_list=ntpo
-    )
-    values_operation_starts = _get_int_values(
-        text=lines[idx_number_improvements + 4], expected_size_list=ntpo
-    )
-    values_uce_room_ids = _get_int_values(
-        text=lines[idx_number_improvements + 5], expected_size_list=ntpo
-    )
-    values_uce_starts = _get_int_values(
-        text=lines[idx_number_improvements + 6], expected_size_list=ntpo
-    )
+    values_patient_ids = _get_int_values(text=lines[idx_number_improvements + 2], expected_size_list=ntpo)
+    values_operating_room_ids = _get_int_values(text=lines[idx_number_improvements + 3], expected_size_list=ntpo)
+    values_operation_starts = _get_int_values(text=lines[idx_number_improvements + 4], expected_size_list=ntpo)
+    values_uce_room_ids = _get_int_values(text=lines[idx_number_improvements + 5], expected_size_list=ntpo)
+    values_uce_starts = _get_int_values(text=lines[idx_number_improvements + 6], expected_size_list=ntpo)
     zipper_values = zip(
         values_patient_ids,
         values_operating_room_ids,

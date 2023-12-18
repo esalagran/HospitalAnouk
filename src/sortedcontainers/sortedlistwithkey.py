@@ -4,13 +4,8 @@
 
 from bisect import bisect_left
 from collections.abc import MutableSequence
-from itertools import chain
-from sys import hexversion
 
 from .sortedlist import SortedList, recursive_repr
-
-if hexversion < 0x03000000:
-    range = xrange
 
 
 class Pair:
@@ -45,9 +40,7 @@ class Pair:
 
 
 class SortedListWithKey(MutableSequence):
-    def __init__(
-        self, iterable=None, key=lambda val: val, value_orderable=True, load=100
-    ):
+    def __init__(self, iterable=None, key=lambda val: val, value_orderable=True, load=100):
         self._key = key
         self._list = SortedList(load=load)
         self._ordered = value_orderable
@@ -294,14 +287,14 @@ class SortedListWithKey(MutableSequence):
 
         _len = _list._len
 
-        if start == None:
+        if start is None:
             start = 0
         if start < 0:
             start += _len
         if start < 0:
             start = 0
 
-        if stop == None:
+        if stop is None:
             stop = _len
         if stop < 0:
             stop += _len
@@ -344,9 +337,7 @@ class SortedListWithKey(MutableSequence):
         return list(tup[1] for tup in self._list.as_list())
 
     def __add__(self, that):
-        result = SortedListWithKey(
-            key=self._key, value_orderable=self._ordered, load=self._list._load
-        )
+        result = SortedListWithKey(key=self._key, value_orderable=self._ordered, load=self._list._load)
         values = self.as_list()
         values.extend(that)
         result.update(values)
@@ -358,9 +349,7 @@ class SortedListWithKey(MutableSequence):
 
     def __mul__(self, that):
         values = self.as_list() * that
-        return SortedListWithKey(
-            values, key=self._key, value_orderable=self._ordered, load=self._list._load
-        )
+        return SortedListWithKey(values, key=self._key, value_orderable=self._ordered, load=self._list._load)
 
     def __imul__(self, that):
         values = self.as_list() * that
@@ -369,34 +358,22 @@ class SortedListWithKey(MutableSequence):
         return self
 
     def __eq__(self, that):
-        return (len(self) == len(that)) and all(
-            lhs == rhs for lhs, rhs in zip(self, that)
-        )
+        return (len(self) == len(that)) and all(lhs == rhs for lhs, rhs in zip(self, that))
 
     def __ne__(self, that):
-        return (len(self) != len(that)) or any(
-            lhs != rhs for lhs, rhs in zip(self, that)
-        )
+        return (len(self) != len(that)) or any(lhs != rhs for lhs, rhs in zip(self, that))
 
     def __lt__(self, that):
-        return (len(self) <= len(that)) and all(
-            lhs < rhs for lhs, rhs in zip(self, that)
-        )
+        return (len(self) <= len(that)) and all(lhs < rhs for lhs, rhs in zip(self, that))
 
     def __le__(self, that):
-        return (len(self) <= len(that)) and all(
-            lhs <= rhs for lhs, rhs in zip(self, that)
-        )
+        return (len(self) <= len(that)) and all(lhs <= rhs for lhs, rhs in zip(self, that))
 
     def __gt__(self, that):
-        return (len(self) >= len(that)) and all(
-            lhs > rhs for lhs, rhs in zip(self, that)
-        )
+        return (len(self) >= len(that)) and all(lhs > rhs for lhs, rhs in zip(self, that))
 
     def __ge__(self, that):
-        return (len(self) >= len(that)) and all(
-            lhs >= rhs for lhs, rhs in zip(self, that)
-        )
+        return (len(self) >= len(that)) and all(lhs >= rhs for lhs, rhs in zip(self, that))
 
     @recursive_repr
     def __repr__(self):

@@ -22,13 +22,8 @@ def _format_check(correct: bool) -> str:
 
 def patient_in_feasible_operating_room(result: Result) -> TestResult:
     sol = result.best_sol
-    is_correct = all(
-        assig.patient.surgical_type == assig.operating_room.surgical_type
-        for assig in sol.assignments
-    )
-    msg = messages["patient_in_feasible_operating_room"].format(
-        _format_check(is_correct)
-    )
+    is_correct = all(assig.patient.surgical_type == assig.operating_room.surgical_type for assig in sol.assignments)
+    msg = messages["patient_in_feasible_operating_room"].format(_format_check(is_correct))
     return is_correct, msg
 
 
@@ -40,9 +35,7 @@ def no_overlap_patients_in_same_operating_room(result: Result) -> TestResult:
         for idx, assig1 in enumerate(sol.assignments_by_or[room])
         for assig2 in sol.assignments_by_or[room][idx + 1 :]
     )
-    msg = messages["no_overlap_patients_in_same_operating_room"].format(
-        _format_check(is_correct)
-    )
+    msg = messages["no_overlap_patients_in_same_operating_room"].format(_format_check(is_correct))
     return is_correct, msg
 
 
@@ -56,18 +49,13 @@ def no_overlap_operating_and_cleaning_in_same_operating_room(
         for idx, assig1 in enumerate(sol.assignments_by_or[room])
         for assig2 in sol.assignments_by_or[room][idx + 1 :]
     )
-    msg = messages["no_overlap_operating_and_cleaning_in_same_operating_room"].format(
-        _format_check(is_correct)
-    )
+    msg = messages["no_overlap_operating_and_cleaning_in_same_operating_room"].format(_format_check(is_correct))
     return is_correct, msg
 
 
 def operations_in_allowed_shift(result: Result) -> TestResult:
     sol = result.best_sol
-    is_correct = all(
-        assig.operation_interval in sol.instance.operation_interval
-        for assig in sol.assignments
-    )
+    is_correct = all(assig.operation_interval in sol.instance.operation_interval for assig in sol.assignments)
     msg = messages["operations_in_allowed_shift"].format(_format_check(is_correct))
     return is_correct, msg
 
@@ -86,8 +74,7 @@ def time_in_urpa_room(result: Result) -> TestResult:
 def maximum_waiting_in_urpa_room(result: Result) -> TestResult:
     sol = result.best_sol
     is_correct = all(
-        assig.waiting_time <= assig.patient.surgical_type.urpa_max_waiting_time
-        for assig in sol.assignments
+        assig.waiting_time <= assig.patient.surgical_type.urpa_max_waiting_time for assig in sol.assignments
     )
     msg = messages["maximum_waiting_in_urpa_room"].format(_format_check(is_correct))
     return is_correct, msg
@@ -95,9 +82,7 @@ def maximum_waiting_in_urpa_room(result: Result) -> TestResult:
 
 def uce_in_allowed_shift(result: Result) -> TestResult:
     sol = result.best_sol
-    is_correct = all(
-        assig.uce_interval in sol.instance.uce_interval for assig in sol.assignments
-    )
+    is_correct = all(assig.uce_interval in sol.instance.uce_interval for assig in sol.assignments)
     msg = messages["uce_in_allowed_shift"].format(_format_check(is_correct))
     return is_correct, msg
 
@@ -105,23 +90,16 @@ def uce_in_allowed_shift(result: Result) -> TestResult:
 def no_exceed_capacity_uce_room(result: Result) -> TestResult:
     sol = result.best_sol
     for room in sol.instance.uce_rooms:
-        for hour in range(
-            sol.instance.uce_interval.lower, sol.instance.uce_interval.upper + 1
-        ):
-            total_assigned = sum(
-                hour in assig.uce_interval for assig in sol.assignments_by_ur[room]
-            )
+        for hour in range(sol.instance.uce_interval.lower, sol.instance.uce_interval.upper + 1):
+            total_assigned = sum(hour in assig.uce_interval for assig in sol.assignments_by_ur[room])
             if total_assigned > room.capacity:
                 is_correct = False
                 break
 
     is_correct = all(
-        sum(hour in assig.uce_interval for assig in sol.assignments_by_ur[room])
-        <= room.capacity
+        sum(hour in assig.uce_interval for assig in sol.assignments_by_ur[room]) <= room.capacity
         for room in sol.instance.uce_rooms
-        for hour in range(
-            sol.instance.uce_interval.lower, sol.instance.uce_interval.upper + 1
-        )
+        for hour in range(sol.instance.uce_interval.lower, sol.instance.uce_interval.upper + 1)
     )
     msg = messages["no_exceed_capacity_uce_room"].format(_format_check(is_correct))
     return is_correct, msg
@@ -130,8 +108,7 @@ def no_exceed_capacity_uce_room(result: Result) -> TestResult:
 def no_mixed_sex_in_uce_room(result: Result) -> TestResult:
     sol = result.best_sol
     is_correct = all(
-        assig1.patient.sex == assig2.patient.sex
-        or (assig1.uce_interval & assig2.uce_interval).empty
+        assig1.patient.sex == assig2.patient.sex or (assig1.uce_interval & assig2.uce_interval).empty
         for room in sol.instance.uce_rooms
         for idx, assig1 in enumerate(sol.assignments_by_ur[room])
         for assig2 in sol.assignments_by_ur[room][idx + 1 :]
@@ -144,10 +121,11 @@ def value_sol(result: Result) -> TestResult:
     sol = result.best_sol
     value_given = int(result.improvements[-1].of)
     is_correct = value_given == sol.value()
-    correct_value_str = f"{sol.value()} ({100}*{sol.number_operated_patients()} + {10}*{sol.weighted_number_operated_patients()} + {1}*{sol.uce_number_hours()})"
-    msg = messages["value_sol"].format(
-        value_given, correct_value_str, _format_check(is_correct)
+    correct_value_str = (
+        f"{sol.value()} ({100}*{sol.number_operated_patients()} + "
+        + f"{10}*{sol.weighted_number_operated_patients()} + {1}*{sol.uce_number_hours()})"
     )
+    msg = messages["value_sol"].format(value_given, correct_value_str, _format_check(is_correct))
     return is_correct, msg
 
 
