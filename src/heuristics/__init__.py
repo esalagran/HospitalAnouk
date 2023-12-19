@@ -1,1 +1,2 @@
-from .heuristics_list import HeuristicBase, SortByPriority
+from .heuristics_list import HeuristicBase, HeuristicGenerator, PredefinedOrder
+from .optimizer import EvolutionaryAlgorithm

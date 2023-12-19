@@ -74,7 +74,7 @@ class Solution:
         sol_str += _SEPARATOR_.join([str(assig.uce_interval.lower) for assig in self.assignments])
         return sol_str
 
-    def find_solution(self, heuristic: HeuristicBase):
+    def find_solution(self, heuristic: HeuristicBase) -> List[Patient]:
         operable_patients = heuristic.sort(self.instance.operable_patients())
         for patient in operable_patients:
             available_ors = self.find_available_ors(patient)
@@ -102,6 +102,7 @@ class Solution:
             if len(assignments) > 0:
                 assignments.sort(key=lambda x: x.uce_interval.lower)
                 self.assign(assignments[0])
+        return operable_patients
 
     def find_available_ors(self, patient: Patient) -> List[Tuple[OperatingRoom, P.Interval]]:
         available_ors: List[Tuple[OperatingRoom, P.Interval]] = []
@@ -122,3 +123,6 @@ class Solution:
                 if inter.contains(uce_time_interval):
                     available_uces.append((uce_room, inter))
         return available_uces
+
+    def get_patients_assigned(self) -> List[Patient]:
+        return [assignment.patient for assignment in self.assignments]
