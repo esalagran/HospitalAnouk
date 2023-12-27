@@ -12,6 +12,7 @@ class Assignment:
         operation_start: int,
         uce_room: UceRoom,
         uce_start: int,
+        interval_spaces: int | None = None
     ):
         self.patient: Patient = patient
         self.operating_room: OperatingRoom = operating_room
@@ -24,6 +25,7 @@ class Assignment:
         )
         self.uce_room: UceRoom = uce_room
         self.uce_interval: P.interval = P.closedopen(uce_start, uce_start + patient.surgical_type.uce_time)
+        self._interval_spaces = interval_spaces
 
     @property
     def urpa_interval(self) -> P.Interval:
@@ -36,3 +38,13 @@ class Assignment:
     @property
     def waiting_time(self) -> int:
         return self.uce_interval.lower - (self.operation_interval.upper + self.patient.surgical_type.urpa_time)
+
+    @property
+    def interval_spaces(self) -> int:
+        if self._interval_spaces is None:
+            raise ValueError("Blank spaces must be set")
+        return self._interval_spaces
+
+    @interval_spaces.setter
+    def interval_spaces(self, new_interval: int | None) -> None:
+        self._interval_spaces = new_interval

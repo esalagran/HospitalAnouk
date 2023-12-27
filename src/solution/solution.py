@@ -79,29 +79,35 @@ class Solution:
         for patient in operable_patients:
             available_ors = self.find_available_ors(patient)
             available_uces = self.find_available_uces(patient)
-            assignments: List[Assignment] = []
+
+            best_assignment = None
+            min_interval_spaces = float('inf')
+
             for or_, or_interval in available_ors:
                 min_start = or_interval.lower + patient.surgical_type.operation_time + patient.surgical_type.urpa_time
                 max_start = min_start + patient.surgical_type.urpa_max_waiting_time + 1
                 for uce, uce_interval in available_uces:
-                    for starting_time in range(min_start, max_start):
+                    if uce_interval.lower > max_start:
+                        continue
+                    for starting_time in range(max(min_start, uce_interval.lower), max_start):
                         patient_uce_interval = P.closedopen(
                             starting_time,
                             starting_time + patient.surgical_type.uce_time,
                         )
                         if uce_interval.contains(patient_uce_interval):
-                            assignments.append(
-                                Assignment(
+                            interval_spaces = abs(starting_time - uce_interval.lower)
+                            if interval_spaces < min_interval_spaces:
+                                best_assignment = Assignment(
                                     patient=patient,
                                     operating_room=or_,
                                     operation_start=or_interval.lower,
                                     uce_room=uce,
                                     uce_start=starting_time,
+                                    interval_spaces=abs(starting_time - uce_interval.lower)
                                 )
-                            )
-            if len(assignments) > 0:
-                assignments.sort(key=lambda x: x.uce_interval.lower)
-                self.assign(assignments[0])
+
+            if best_assignment is not None:
+                self.assign(best_assignment)
         return operable_patients
 
     def find_available_ors(self, patient: Patient) -> List[Tuple[OperatingRoom, P.Interval]]:

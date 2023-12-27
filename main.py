@@ -62,8 +62,8 @@ def find_result(path_input: Path, path_output: Path) -> Tuple[float, float]:
     patients_list: List[Tuple[List[Patient], float]] = run_parallel(
         HeuristicGenerator().get_heuristics(), result, path_input, cpu_time
     )
-    with tqdm(total=30) as progress_bar:
-        for _ in range(30):
+    with tqdm(total=10) as progress_bar:
+        for _ in range(10):
             optimization = EvolutionaryAlgorithm(patients_list)
             algorithms_list = [PredefinedOrder(child) for child in optimization.get_population()]
             patients_list = run_parallel(algorithms_list, result, path_input, cpu_time)
