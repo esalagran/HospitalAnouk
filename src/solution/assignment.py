@@ -12,7 +12,7 @@ class Assignment:
         operation_start: int,
         uce_room: UceRoom,
         uce_start: int,
-        interval_spaces: int | None = None
+        interval_spaces: int | None = None,
     ):
         self.patient: Patient = patient
         self.operating_room: OperatingRoom = operating_room

@@ -81,7 +81,6 @@ class Solution:
             available_uces = self.find_available_uces(patient)
 
             best_assignment = None
-            min_interval_spaces = float('inf')
 
             for or_, or_interval in available_ors:
                 min_start = or_interval.lower + patient.surgical_type.operation_time + patient.surgical_type.urpa_time
@@ -95,19 +94,20 @@ class Solution:
                             starting_time + patient.surgical_type.uce_time,
                         )
                         if uce_interval.contains(patient_uce_interval):
-                            interval_spaces = abs(starting_time - uce_interval.lower)
-                            if interval_spaces < min_interval_spaces:
-                                best_assignment = Assignment(
-                                    patient=patient,
-                                    operating_room=or_,
-                                    operation_start=or_interval.lower,
-                                    uce_room=uce,
-                                    uce_start=starting_time,
-                                    interval_spaces=abs(starting_time - uce_interval.lower)
-                                )
+                            best_assignment = Assignment(
+                                patient=patient,
+                                operating_room=or_,
+                                operation_start=or_interval.lower,
+                                uce_room=uce,
+                                uce_start=starting_time,
+                                interval_spaces=abs(starting_time - uce_interval.lower),
+                            )
 
             if best_assignment is not None:
                 self.assign(best_assignment)
+            else:
+                if patient.surgical_type.id not in [4, 11]:
+                    print(patient)
         return operable_patients
 
     def find_available_ors(self, patient: Patient) -> List[Tuple[OperatingRoom, P.Interval]]:
