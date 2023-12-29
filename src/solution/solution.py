@@ -80,28 +80,41 @@ class Solution:
             available_ors = self.find_available_ors(patient)
             available_uces = self.find_available_uces(patient)
 
-            best_assignment = None
+            best_assignment, min_blanks = None, float("inf")
+            sex_order = [1, 0, 2] if patient.sex == 1 else [2, 0, 1]
+            for sex in sex_order:
+                for or_, or_interval in available_ors:
+                    min_start = (
+                        or_interval.lower + patient.surgical_type.operation_time + patient.surgical_type.urpa_time
+                    )
+                    max_start = min_start + patient.surgical_type.urpa_max_waiting_time + 1
 
-            for or_, or_interval in available_ors:
-                min_start = or_interval.lower + patient.surgical_type.operation_time + patient.surgical_type.urpa_time
-                max_start = min_start + patient.surgical_type.urpa_max_waiting_time + 1
-                for uce, uce_interval in available_uces:
-                    if uce_interval.lower > max_start:
-                        continue
-                    for starting_time in range(max(min_start, uce_interval.lower), max_start):
-                        patient_uce_interval = P.closedopen(
-                            starting_time,
-                            starting_time + patient.surgical_type.uce_time,
-                        )
-                        if uce_interval.contains(patient_uce_interval):
-                            best_assignment = Assignment(
-                                patient=patient,
-                                operating_room=or_,
-                                operation_start=or_interval.lower,
-                                uce_room=uce,
-                                uce_start=starting_time,
-                                interval_spaces=abs(starting_time - uce_interval.lower),
+                    for uce, uce_interval in available_uces:
+                        if uce.sex != sex:
+                            continue
+                        if uce_interval.lower > max_start:
+                            continue
+                        for starting_time in range(max(min_start, uce_interval.lower), max_start):
+                            patient_uce_interval = P.closedopen(
+                                starting_time,
+                                starting_time + patient.surgical_type.uce_time,
                             )
+                            blanks = min(
+                                abs(starting_time - uce_interval.lower), abs(uce_interval.upper - starting_time)
+                            )
+                            if uce_interval.contains(patient_uce_interval) and blanks < min_blanks:
+                                best_assignment = Assignment(
+                                    patient=patient,
+                                    operating_room=or_,
+                                    operation_start=or_interval.lower,
+                                    uce_room=uce,
+                                    uce_start=starting_time,
+                                    interval_spaces=abs(starting_time - uce_interval.lower),
+                                )
+                                # min_blanks = blanks
+                if best_assignment is not None:
+                    best_assignment.uce_room.sex = patient.sex
+                    break
 
             if best_assignment is not None:
                 self.assign(best_assignment)
