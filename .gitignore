@@ -161,3 +161,4 @@ data/
 .pre-commit-config.yaml
 .vscode/
 pyproject.toml
+*.png

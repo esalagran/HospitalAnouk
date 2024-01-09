@@ -1,12 +1,13 @@
-from typing import Dict, List, Tuple
+from typing import Dict, List, Set, Tuple
 
 from .. import portion as P
 from ..elements.operating_room import OperatingRoom
 from ..elements.patient import Patient
 from ..elements.uce_room import UceRoom
 from ..heuristics import HeuristicBase
-from ..instance.instance import Instance
+from ..instance.instance import _UCE_ROOMS_, Instance
 from .assignment import Assignment
+from .criterion import Criterion, MaxTime
 
 WEIGHT_OBJECTIVE_1 = 100
 WEIGHT_OBJECTIVE_2 = 10
@@ -76,52 +77,82 @@ class Solution:
 
     def find_solution(self, heuristic: HeuristicBase) -> List[Patient]:
         operable_patients = heuristic.sort(self.instance.operable_patients())
-        for patient in operable_patients:
-            available_ors = self.find_available_ors(patient)
-            available_uces = self.find_available_uces(patient)
-
-            best_assignment, min_blanks = None, float("inf")
-            sex_order = [1, 0, 2] if patient.sex == 1 else [2, 0, 1]
-            for sex in sex_order:
-                for or_, or_interval in available_ors:
-                    min_start = (
-                        or_interval.lower + patient.surgical_type.operation_time + patient.surgical_type.urpa_time
-                    )
-                    max_start = min_start + patient.surgical_type.urpa_max_waiting_time + 1
-
-                    for uce, uce_interval in available_uces:
-                        if uce.sex != sex:
-                            continue
-                        if uce_interval.lower > max_start:
-                            continue
-                        for starting_time in range(max(min_start, uce_interval.lower), max_start):
-                            patient_uce_interval = P.closedopen(
-                                starting_time,
-                                starting_time + patient.surgical_type.uce_time,
-                            )
-                            blanks = min(
-                                abs(starting_time - uce_interval.lower), abs(uce_interval.upper - starting_time)
-                            )
-                            if uce_interval.contains(patient_uce_interval) and blanks < min_blanks:
-                                best_assignment = Assignment(
-                                    patient=patient,
-                                    operating_room=or_,
-                                    operation_start=or_interval.lower,
-                                    uce_room=uce,
-                                    uce_start=starting_time,
-                                    interval_spaces=abs(starting_time - uce_interval.lower),
-                                )
-                                # min_blanks = blanks
-                if best_assignment is not None:
-                    best_assignment.uce_room.sex = patient.sex
-                    break
-
-            if best_assignment is not None:
-                self.assign(best_assignment)
-            else:
-                if patient.surgical_type.id not in [4, 11]:
-                    print(patient)
+        patients_assigned = self.assign_to_end(operable_patients)
+        self.default_assignment(operable_patients, patients_assigned)
         return operable_patients
+
+    def assign_to_end(self, patients_list: List[Patient]) -> Set[Patient]:
+        num_assignments = 0
+        patients_assigned: Set[Patient] = set()
+        for relaxation in [72, 60, 48, 36, 24]:
+            for patient in patients_list:
+                if patient.surgical_type.uce_time != relaxation:
+                    continue
+                if self.assign_patient(patient, MaxTime()):
+                    num_assignments += 1
+                    patients_assigned.add(patient)
+                    if num_assignments == _UCE_ROOMS_ * 2:
+                        return patients_assigned
+        return patients_assigned
+
+    def default_assignment(self, patients_list: List[Patient], patients_assigned: Set[Patient]) -> Set[Patient]:
+        for patient in patients_list:
+            if patient in patients_assigned:
+                continue
+            criterion = MaxTime()
+            criterion.minimum_time = 0
+            self.assign_patient(patient, criterion)
+
+    def assign_patient(self, patient: Patient, criterion: Criterion) -> bool:
+        available_ors = self.find_available_ors(patient)
+        available_uces = self.find_available_uces(patient)
+
+        sex_order = [1, 0, 2] if patient.sex == 1 else [2, 0, 1]
+        for sex in sex_order:
+            for or_, or_interval in available_ors:
+                min_start = or_interval.lower + patient.surgical_type.operation_time + patient.surgical_type.urpa_time
+                max_start = (
+                    or_interval.upper
+                    + patient.surgical_type.urpa_time
+                    + patient.surgical_type.urpa_max_waiting_time
+                    + 1
+                )
+                max_start_minimum = min_start + patient.surgical_type.urpa_max_waiting_time + 1
+
+                for uce, uce_interval in available_uces:
+                    if uce.sex != sex:
+                        continue
+                    if uce_interval.lower > max_start:
+                        continue
+                    for starting_time in range(max(min_start, uce_interval.lower), max_start):
+                        patient_uce_interval = P.closedopen(
+                            starting_time,
+                            starting_time + patient.surgical_type.uce_time,
+                        )
+                        blanks = min(abs(starting_time - uce_interval.lower), abs(uce_interval.upper - starting_time))
+                        if uce_interval.contains(patient_uce_interval):
+                            operation_start = (
+                                or_interval.lower
+                                if starting_time < max_start_minimum
+                                else or_interval.upper - patient.surgical_type.operation_time
+                            )
+                            new_assignment = Assignment(
+                                patient=patient,
+                                operating_room=or_,
+                                operation_start=operation_start,
+                                uce_room=uce,
+                                uce_start=starting_time,
+                            )
+                            criterion.evaluate(new_assignment, blanks)
+
+            if criterion.best_assignment is not None:
+                criterion.best_assignment.uce_room.sex = patient.sex
+                break
+
+        if criterion.best_assignment is not None:
+            self.assign(criterion.best_assignment)
+            return True
+        return False
 
     def find_available_ors(self, patient: Patient) -> List[Tuple[OperatingRoom, P.Interval]]:
         available_ors: List[Tuple[OperatingRoom, P.Interval]] = []

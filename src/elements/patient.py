@@ -11,3 +11,9 @@ class Patient(Id):
 
     def __repr__(self) -> str:
         return f"<id={self.id}, priority={self.priority}, sex={self.sex}, surgical_type={self.surgical_type.id}>"
+
+    def time_to_uce(self) -> int:
+        return self.surgical_type.urpa_time + self.surgical_type.operation_time
+
+    def time_to_leave(self) -> int:
+        return self.time_to_uce() + self.surgical_type.uce_time

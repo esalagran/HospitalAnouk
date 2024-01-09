@@ -14,7 +14,11 @@ class HeuristicBase:
 class SortByPriority(HeuristicBase):
     @classmethod
     def sort(cls, patients: List[Patient]) -> List[Patient]:
-        return sorted(patients, key=lambda patient: patient.priority, reverse=True)
+        return sorted(
+            patients,
+            key=lambda patient: (patient.priority, -patient.time_to_uce(), -patient.time_to_leave(), patient.sex),
+            reverse=True,
+        )
 
 
 class SortByMinimumUceTime(HeuristicBase):
@@ -38,6 +42,23 @@ class SortByMinimumTimeToUceThenPriority(HeuristicBase):
         return first_list[:8] + SortByPriority().sort(first_list[8:])
 
 
+class SortByMinimumTime(HeuristicBase):
+    @classmethod
+    def sort(cls, patients: List[Patient]) -> List[Patient]:
+        return sorted(
+            patients,
+            key=lambda patient: (
+                -patient.priority
+                + 0.1
+                * (
+                    patient.surgical_type.urpa_time
+                    + patient.surgical_type.operation_time
+                    + patient.surgical_type.uce_time
+                )
+            ),
+        )
+
+
 class SortByMinimumTimeToUceThenMinimumUCE(HeuristicBase):
     @classmethod
     def sort(cls, patients: List[Patient]) -> List[Patient]:
@@ -45,6 +66,19 @@ class SortByMinimumTimeToUceThenMinimumUCE(HeuristicBase):
             patients, key=lambda patient: patient.surgical_type.urpa_time + patient.surgical_type.operation_time
         )
         return first_list[:8] + SortByMinimumUceTime().sort(first_list[8:])
+
+
+class SortByOperationTypeSexPriority(HeuristicBase):
+    @classmethod
+    def sort(cls, patients: List[Patient]) -> List[Patient]:
+        return sorted(
+            patients,
+            key=lambda patient: (
+                patient.surgical_type.urpa_time + patient.surgical_type.uce_time + patient.surgical_type.operation_time,
+                patient.sex,
+                patient.priority,
+            ),
+        )
 
 
 class RandomOrder(HeuristicBase):

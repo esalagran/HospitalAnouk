@@ -26,7 +26,7 @@ def visualize_or(assignments_by_or: Dict[OperatingRoom, List[Assignment]]):
             plt.text(
                 (assignment.operation_cleaning_interval.upper + assignment.operation_cleaning_interval.lower) / 2,
                 operating_room.id,
-                f"{assignment.patient.id},{assignment.patient.priority}",
+                f"{assignment.patient.id}",
                 ha="center",
                 va="center",
             )
@@ -34,8 +34,8 @@ def visualize_or(assignments_by_or: Dict[OperatingRoom, List[Assignment]]):
     plt.xlabel("Value")
     plt.ylabel("Interval")
     plt.title("Non-Overlapping Intervals")
-    plt.xticks(np.arange(8, 94, 12))
-    plt.xticks(np.arange(8, 94, 3))
+    plt.xticks(np.arange(8, 95, 12))
+    plt.xticks(np.arange(8, 95, 3))
 
     plt.yticks(np.arange(1, 9), [operating_room.surgical_type.id for operating_room in assignments_by_or])
     plt.grid(axis="x")
@@ -65,7 +65,10 @@ def visualize_ur(assignments_by_ur: Dict[UceRoom, List[Assignment]]):
             plt.text(
                 (assignment.uce_interval.upper + assignment.uce_interval.lower) / 2,
                 ur.id + (0 if bottom else 0.5),
-                f"id={assignment.patient.id}, {'m' if assignment.patient.sex == 1 else 'w'}, p={assignment.patient.priority}, st={assignment.patient.surgical_type.id}",
+                (
+                    f"id={assignment.patient.id}, {'m' if assignment.patient.sex == 1 else 'w'}, "
+                    + f"p={assignment.patient.priority}, st={assignment.patient.surgical_type.id}"
+                ),
                 ha="center",
                 va="center",
             )
@@ -76,7 +79,7 @@ def visualize_ur(assignments_by_ur: Dict[UceRoom, List[Assignment]]):
     plt.xlabel("Value")
     plt.ylabel("Interval")
     plt.title("Non-Overlapping Intervals")
-    plt.xticks(np.arange(12, 12 + 24 * 6, 12))
+    plt.xticks(np.arange(12, 13 + 24 * 6.5, 12))
 
     plt.yticks(np.arange(1, 11), [ur.id for ur in assignments_by_ur])
     plt.grid(axis="x")

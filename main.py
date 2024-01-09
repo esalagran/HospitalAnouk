@@ -4,8 +4,6 @@ from datetime import datetime
 from pathlib import Path
 from typing import List, Tuple
 
-from tqdm import tqdm
-
 from src.elements.patient import Patient
 from src.heuristics import EvolutionaryAlgorithm, HeuristicBase, HeuristicGenerator, PredefinedOrder
 from src.instance import get_instance
@@ -41,6 +39,30 @@ def run_parallel(
     return returning_value
 
 
+def optimize_swap_pairs(
+    patients_list: List[Patient], result: Result, path_input: Path, cpu_time: float
+) -> List[Patient]:
+    num_patients = len(patients_list)
+
+    for idx in range(num_patients):
+        for idx2 in range(idx + 1, num_patients):
+            if patients_list[idx].surgical_type.id != patients_list[idx2].surgical_type.id:
+                continue
+            if patients_list[idx].sex == patients_list[idx2].sex:
+                continue
+            new_order = patients_list.copy()
+            new_order[idx], new_order[idx2] = new_order[idx2], new_order[idx]
+            _, solution = get_best_order_par((PredefinedOrder(new_order), path_input))
+            if result.best_sol is None or result.best_sol.value() < solution.value():
+                result.add_improvement(solution.value(), (datetime.now() - cpu_time).seconds)
+                result.add_best(solution)
+                print(solution.value())
+                patients_list = new_order
+            else:
+                assert patients_list != new_order
+    return patients_list
+
+
 def get_best_order(
     result: Result, path_input: Path, heuristic: HeuristicBase, cpu_time: float
 ) -> Tuple[List[Patient], float]:
@@ -62,18 +84,25 @@ def find_result(path_input: Path, path_output: Path) -> Tuple[float, float]:
     patients_list: List[Tuple[List[Patient], float]] = run_parallel(
         HeuristicGenerator().get_heuristics(), result, path_input, cpu_time
     )
-    with tqdm(total=10) as progress_bar:
-        for _ in range(10):
-            optimization = EvolutionaryAlgorithm(patients_list)
-            algorithms_list = [PredefinedOrder(child) for child in optimization.get_population()]
-            patients_list = run_parallel(algorithms_list, result, path_input, cpu_time)
-            patients_list.append((optimization.get_best_exemplar()))
-            progress_bar.set_postfix_str(optimization.get_data_progress_bar())
-            progress_bar.update(1)
+    # patients_orders, fitness = [list(x) for x in zip(*patients_list)]
+    # elite_index = max(range(len(fitness)), key=fitness.__getitem__)
+    # best_result_so_far = optimize_swap_pairs(patients_orders[elite_index].copy(), result, path_input, cpu_time)
+    # patients_list.append((best_result_so_far, result.best_sol.value()))
+    # with tqdm(total=15) as progress_bar:
+    while (datetime.now() - cpu_time).seconds < 60 * 3:
+        optimization = EvolutionaryAlgorithm(patients_list)
+        algorithms_list = [PredefinedOrder(child) for child in optimization.get_population()]
+        patients_list = run_parallel(algorithms_list, result, path_input, cpu_time)
+        patients_list.append((optimization.get_best_exemplar()))
+        # progress_bar.set_postfix_str(optimization.get_data_progress_bar())
+        # progress_bar.update(1)
 
     assert result.best_sol is not None
     with open(path_output, "w+") as f:
         f.write(str(result))
+
+    # visualize_or(result.best_sol.assignments_by_or)
+    # visualize_ur(result.best_sol.assignments_by_ur)
 
     is_correct, message = tester(path_input, path_output)
     if not is_correct:
@@ -84,6 +113,17 @@ def find_result(path_input: Path, path_output: Path) -> Tuple[float, float]:
 
 
 if __name__ == "__main__":
-    path_instance = FOLDER_INSTANCES / "ejemplar_calibrado_3.txt"
-    path_result = FOLDER_RESULTS / "sol_ejemplar_calibrado_3.txt"
+    # path_instance = FOLDER_INSTANCES / "ejemplar_calibrado_3.txt"
+    path_instance = FOLDER_INSTANCES / "ejemplar_calibrado_94.txt"
+    # path_instance = FOLDER_INSTANCES / "ejemplar_calibrado_56.txt"
+    # path_instance = FOLDER_INSTANCES / "ejemplar_calibrado_97.txt"
+    # path_instance = FOLDER_INSTANCES / "ejemplar_calibrado_42.txt"
+    # path_instance = FOLDER_INSTANCES / "ejemplar_calibrado_68.txt"
+    # path_instance = FOLDER_INSTANCES / "ejemplar_calibrado_69.txt"
+
+    # path_instance = FOLDER_INSTANCES / "ejemplar_prueba_5.txt"
+
+    # path_result = FOLDER_RESULTS / "sol_ejemplar_calibrado_3.txt"
+    path_result = FOLDER_RESULTS / "sol_ejemplar_calibrado_94.txt"
+
     print(find_result(path_instance, path_result))

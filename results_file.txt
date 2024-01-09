@@ -1,0 +1,446 @@
+ejemplar_calibrado_80.txt --> solution_cost: 13202 acceptable cost: 12510
+
+ejemplar_prueba_4.txt --> solution_cost: 9974 acceptable cost: 9638
+
+ejemplar_calibrado_94.txt --> solution_cost: 11020 acceptable cost: 11038
+
+ejemplar_prueba_38.txt --> solution_cost: 9468 acceptable cost: 9468
+
+ejemplar_calibrado_43.txt --> solution_cost: 11986 acceptable cost: 11986
+
+ejemplar_prueba_10.txt --> solution_cost: 8862 acceptable cost: 8560
+
+ejemplar_calibrado_57.txt --> solution_cost: 13744 acceptable cost: 12412
+
+ejemplar_prueba_100.txt --> solution_cost: 10050 acceptable cost: 9920
+
+ejemplar_calibrado_56.txt --> solution_cost: 13022 acceptable cost: 12122
+
+ejemplar_calibrado_42.txt --> solution_cost: 9752 acceptable cost: 9314
+
+ejemplar_prueba_11.txt --> solution_cost: 11156 acceptable cost: 10838
+
+ejemplar_prueba_39.txt --> solution_cost: 12426 acceptable cost: 11662
+
+ejemplar_prueba_5.txt --> solution_cost: 11026 acceptable cost: 11758
+
+ejemplar_calibrado_95.txt --> solution_cost: 10646 acceptable cost: 10512
+
+ejemplar_calibrado_81.txt --> solution_cost: 11640 acceptable cost: 11642
+
+ejemplar_calibrado_97.txt --> solution_cost: 11936 acceptable cost: 12192
+
+ejemplar_prueba_7.txt --> solution_cost: 8766 acceptable cost: 8742
+
+ejemplar_calibrado_83.txt --> solution_cost: 9524 acceptable cost: 9532
+
+ejemplar_calibrado_68.txt --> solution_cost: 9358 acceptable cost: 10224
+
+ejemplar_calibrado_54.txt --> solution_cost: 12356 acceptable cost: 12032
+
+ejemplar_prueba_13.txt --> solution_cost: 9996 acceptable cost: 9962
+
+data/Exemplars/data/ejemplar_calibrado_40.txt
+Los pacientes son intervenidos en quirofanos adecuados a sus tipos de intervenciones: OK
+No hay solapamientos de pacientes en un mismo quirofano: OK
+No hay solapamientos de limpiezas e intervenciones en un mismo quirofano: OK
+Las intervenciones quirurgicas se realizan dentro del horario permitido: OK
+Se respeta el tiempo de reanimacion en una box de URPA: OK
+No se sobrepasa el tiempo maximo de espera en una box de URPA: OK
+Las recuperaciones en las habitaciones de UCE se realizan dentro del horario permitido: OK
+No se exceden las capacidades de las habitaciones de UCE: OK
+Pacientes de sexos diferentes no comparten habitacion de UCE: OK
+Valor de la solucion dado 11480 es igual a 11480 (100*55 + 10*352 + 1*2460): OK
+Se respeta el tiempo maximo de resolucion: INCORRECT
+ejemplar_calibrado_40.txt --> solution_cost: 11480 acceptable cost: 10654
+
+ejemplar_prueba_12.txt --> solution_cost: 13432 acceptable cost: 13014
+
+ejemplar_calibrado_41.txt --> solution_cost: 10844 acceptable cost: 10506
+
+ejemplar_calibrado_55.txt --> solution_cost: 8364 acceptable cost: 8372
+
+ejemplar_calibrado_69.txt --> solution_cost: 10358 acceptable cost: 11076
+
+ejemplar_calibrado_82.txt --> solution_cost: 10540 acceptable cost: 10348
+
+ejemplar_calibrado_96.txt --> solution_cost: 12746 acceptable cost: 12178
+
+ejemplar_prueba_6.txt --> solution_cost: 12062 acceptable cost: 11782
+
+ejemplar_prueba_2.txt --> solution_cost: 10156 acceptable cost: 9976
+
+ejemplar_calibrado_92.txt --> solution_cost: 10820 acceptable cost: 10178
+
+ejemplar_calibrado_86.txt --> solution_cost: 10028 acceptable cost: 9790
+
+ejemplar_calibrado_51.txt --> solution_cost: 8586 acceptable cost: 8128
+
+ejemplar_calibrado_45.txt --> solution_cost: 10636 acceptable cost: 10892
+
+ejemplar_prueba_16.txt --> solution_cost: 11482 acceptable cost: 10464
+
+ejemplar_calibrado_79.txt --> solution_cost: 11692 acceptable cost: 10780
+
+ejemplar_calibrado_78.txt --> solution_cost: 10980 acceptable cost: 10522
+
+ejemplar_calibrado_44.txt --> solution_cost: 12686 acceptable cost: 11164
+
+ejemplar_prueba_17.txt --> solution_cost: 10454 acceptable cost: 10218
+
+ejemplar_calibrado_50.txt --> solution_cost: 12654 acceptable cost: 11498
+
+ejemplar_calibrado_87.txt --> solution_cost: 11726 acceptable cost: 11036
+
+ejemplar_prueba_3.txt --> solution_cost: 11900 acceptable cost: 11776
+
+ejemplar_calibrado_93.txt --> solution_cost: 11402 acceptable cost: 10950
+
+ejemplar_calibrado_85.txt --> solution_cost: 11406 acceptable cost: 11372
+
+ejemplar_calibrado_91.txt --> solution_cost: 11866 acceptable cost: 11552
+
+ejemplar_prueba_1.txt --> solution_cost: 11244 acceptable cost: 10930
+
+ejemplar_prueba_15.txt --> solution_cost: 12688 acceptable cost: 11656
+
+ejemplar_calibrado_46.txt --> solution_cost: 12028 acceptable cost: 11482
+
+ejemplar_calibrado_52.txt --> solution_cost: 12394 acceptable cost: 11576
+
+ejemplar_prueba_29.txt --> solution_cost: 12024 acceptable cost: 11276
+
+ejemplar_prueba_28.txt --> solution_cost: 14112 acceptable cost: 12866
+
+ejemplar_calibrado_53.txt --> solution_cost: 9892 acceptable cost: 9464
+
+ejemplar_prueba_14.txt --> solution_cost: 10828 acceptable cost: 10688
+
+ejemplar_calibrado_47.txt --> solution_cost: 13274 acceptable cost: 11870
+
+ejemplar_calibrado_90.txt --> solution_cost: 10568 acceptable cost: 10282
+
+ejemplar_calibrado_84.txt --> solution_cost: 10700 acceptable cost: 10432
+
+ejemplar_prueba_98.txt --> solution_cost: 13792 acceptable cost: 13442
+
+ejemplar_prueba_73.txt --> solution_cost: 10228 acceptable cost: 10118
+
+ejemplar_calibrado_20.txt --> solution_cost: 12492 acceptable cost: 11644
+
+ejemplar_calibrado_34.txt --> solution_cost: 10612 acceptable cost: 10874
+
+ejemplar_prueba_67.txt --> solution_cost: 9502 acceptable cost: 9800
+
+ejemplar_calibrado_1.txt --> solution_cost: 8050 acceptable cost: 7906
+
+ejemplar_calibrado_35.txt --> solution_cost: 11786 acceptable cost: 11802
+
+ejemplar_prueba_66.txt --> solution_cost: 14268 acceptable cost: 12888
+
+ejemplar_prueba_72.txt --> solution_cost: 10032 acceptable cost: 10400
+
+ejemplar_calibrado_21.txt --> solution_cost: 13402 acceptable cost: 12326
+
+ejemplar_prueba_99.txt --> solution_cost: 9906 acceptable cost: 9906
+
+ejemplar_prueba_58.txt --> solution_cost: 12278 acceptable cost: 11960
+
+ejemplar_prueba_64.txt --> solution_cost: 10768 acceptable cost: 10168
+
+ejemplar_calibrado_37.txt --> solution_cost: 8746 acceptable cost: 8746
+
+ejemplar_calibrado_23.txt --> solution_cost: 12526 acceptable cost: 11674
+
+ejemplar_prueba_70.txt --> solution_cost: 10894 acceptable cost: 10460
+
+ejemplar_calibrado_2.txt --> solution_cost: 8172 acceptable cost: 7996
+
+ejemplar_calibrado_3.txt --> solution_cost: 13258 acceptable cost: 11938
+
+data/Exemplars/data/ejemplar_calibrado_22.txt
+Los pacientes son intervenidos en quirofanos adecuados a sus tipos de intervenciones: OK
+No hay solapamientos de pacientes en un mismo quirofano: OK
+No hay solapamientos de limpiezas e intervenciones en un mismo quirofano: OK
+Las intervenciones quirurgicas se realizan dentro del horario permitido: OK
+Se respeta el tiempo de reanimacion en una box de URPA: OK
+No se sobrepasa el tiempo maximo de espera en una box de URPA: OK
+Las recuperaciones en las habitaciones de UCE se realizan dentro del horario permitido: OK
+No se exceden las capacidades de las habitaciones de UCE: OK
+Pacientes de sexos diferentes no comparten habitacion de UCE: OK
+Valor de la solucion dado 13296 es igual a 13296 (100*70 + 10*386 + 1*2436): OK
+Se respeta el tiempo maximo de resolucion: INCORRECT
+ejemplar_calibrado_22.txt --> solution_cost: 13296 acceptable cost: 12424
+
+ejemplar_prueba_71.txt --> solution_cost: 10026 acceptable cost: 9756
+
+ejemplar_prueba_65.txt --> solution_cost: 13114 acceptable cost: 12296
+
+ejemplar_calibrado_36.txt --> solution_cost: 10820 acceptable cost: 10856
+
+ejemplar_prueba_59.txt --> solution_cost: 11470 acceptable cost: 11110
+
+ejemplar_calibrado_32.txt --> solution_cost: 11012 acceptable cost: 10838
+
+ejemplar_prueba_61.txt --> solution_cost: 10324 acceptable cost: 10154
+
+ejemplar_prueba_75.txt --> solution_cost: 12456 acceptable cost: 11872
+
+ejemplar_calibrado_26.txt --> solution_cost: 11242 acceptable cost: 10440
+
+ejemplar_prueba_49.txt --> solution_cost: 9890 acceptable cost: 9890
+
+ejemplar_calibrado_7.txt --> solution_cost: 11418 acceptable cost: 10900
+
+ejemplar_calibrado_6.txt --> solution_cost: 14246 acceptable cost: 13564
+
+ejemplar_prueba_48.txt --> solution_cost: 10574 acceptable cost: 10240
+
+ejemplar_prueba_74.txt --> solution_cost: 12792 acceptable cost: 11372
+
+ejemplar_calibrado_27.txt --> solution_cost: 10278 acceptable cost: 10132
+
+ejemplar_calibrado_33.txt --> solution_cost: 9960 acceptable cost: 9770
+
+ejemplar_prueba_60.txt --> solution_cost: 13674 acceptable cost: 12652
+
+ejemplar_prueba_89.txt --> solution_cost: 9952 acceptable cost: 9448
+
+ejemplar_calibrado_25.txt --> solution_cost: 12434 acceptable cost: 12122
+
+ejemplar_prueba_76.txt --> solution_cost: 7992 acceptable cost: 7802
+
+ejemplar_prueba_62.txt --> solution_cost: 10900 acceptable cost: 11148
+
+ejemplar_calibrado_31.txt --> solution_cost: 12660 acceptable cost: 11794
+
+ejemplar_calibrado_19.txt --> solution_cost: 8744 acceptable cost: 8744
+
+ejemplar_calibrado_4.txt --> solution_cost: 11200 acceptable cost: 11130
+
+ejemplar_calibrado_5.txt --> solution_cost: 11796 acceptable cost: 11804
+
+ejemplar_calibrado_18.txt --> solution_cost: 12706 acceptable cost: 12400
+
+ejemplar_prueba_63.txt --> solution_cost: 11628 acceptable cost: 10408
+
+data/Exemplars/data/ejemplar_calibrado_30.txt
+Los pacientes son intervenidos en quirofanos adecuados a sus tipos de intervenciones: OK
+No hay solapamientos de pacientes en un mismo quirofano: OK
+No hay solapamientos de limpiezas e intervenciones en un mismo quirofano: OK
+Las intervenciones quirurgicas se realizan dentro del horario permitido: OK
+Se respeta el tiempo de reanimacion en una box de URPA: OK
+No se sobrepasa el tiempo maximo de espera en una box de URPA: OK
+Las recuperaciones en las habitaciones de UCE se realizan dentro del horario permitido: OK
+No se exceden las capacidades de las habitaciones de UCE: OK
+Pacientes de sexos diferentes no comparten habitacion de UCE: OK
+Valor de la solucion dado 10344 es igual a 10344 (100*48 + 10*336 + 1*2184): OK
+Se respeta el tiempo maximo de resolucion: INCORRECT
+ejemplar_calibrado_30.txt --> solution_cost: 10344 acceptable cost: 10384
+
+ejemplar_calibrado_24.txt --> solution_cost: 10340 acceptable cost: 10334
+
+ejemplar_prueba_77.txt --> solution_cost: 7900 acceptable cost: 7900
+
+ejemplar_prueba_88.txt --> solution_cost: 11680 acceptable cost: 11048
+
+ejemplar_prueba_91.txt --> solution_cost: 12180 acceptable cost: 12270
+
+ejemplar_prueba_85.txt --> solution_cost: 9450 acceptable cost: 9122
+
+ejemplar_calibrado_29.txt --> solution_cost: 12634 acceptable cost: 11532
+
+ejemplar_prueba_52.txt --> solution_cost: 12132 acceptable cost: 11866
+
+ejemplar_calibrado_15.txt --> solution_cost: 14016 acceptable cost: 13288
+
+ejemplar_prueba_46.txt --> solution_cost: 11164 acceptable cost: 11164
+
+ejemplar_calibrado_8.txt --> solution_cost: 11100 acceptable cost: 10932
+
+ejemplar_calibrado_9.txt --> solution_cost: 13076 acceptable cost: 12874
+
+ejemplar_calibrado_14.txt --> solution_cost: 10658 acceptable cost: 10012
+
+ejemplar_prueba_47.txt --> solution_cost: 9854 acceptable cost: 10280
+
+ejemplar_prueba_53.txt --> solution_cost: 10590 acceptable cost: 10240
+
+ejemplar_calibrado_28.txt --> solution_cost: 8598 acceptable cost: 8586
+
+ejemplar_prueba_84.txt --> solution_cost: 12292 acceptable cost: 12090
+
+ejemplar_prueba_90.txt --> solution_cost: 12888 acceptable cost: 11966
+
+ejemplar_prueba_86.txt --> solution_cost: 12756 acceptable cost: 12436
+
+ejemplar_prueba_92.txt --> solution_cost: 14264 acceptable cost: 13386
+
+ejemplar_prueba_79.txt --> solution_cost: 8476 acceptable cost: 8324
+
+ejemplar_prueba_45.txt --> solution_cost: 9592 acceptable cost: 10246
+
+ejemplar_calibrado_16.txt --> solution_cost: 10570 acceptable cost: 10632
+
+ejemplar_prueba_51.txt --> solution_cost: 10126 acceptable cost: 9704
+
+ejemplar_prueba_50.txt --> solution_cost: 13036 acceptable cost: 12938
+
+ejemplar_prueba_44.txt --> solution_cost: 11730 acceptable cost: 11806
+
+ejemplar_calibrado_17.txt --> solution_cost: 12248 acceptable cost: 11546
+
+ejemplar_prueba_78.txt --> solution_cost: 11704 acceptable cost: 11462
+
+ejemplar_prueba_93.txt --> solution_cost: 11554 acceptable cost: 11322
+
+ejemplar_prueba_87.txt --> solution_cost: 12666 acceptable cost: 11974
+
+ejemplar_prueba_83.txt --> solution_cost: 12420 acceptable cost: 11574
+
+ejemplar_prueba_97.txt --> solution_cost: 11118 acceptable cost: 10366
+
+ejemplar_calibrado_13.txt --> solution_cost: 11456 acceptable cost: 10866
+
+ejemplar_prueba_40.txt --> solution_cost: 8560 acceptable cost: 8252
+
+ejemplar_prueba_54.txt --> solution_cost: 7958 acceptable cost: 8064
+
+ejemplar_prueba_68.txt --> solution_cost: 11424 acceptable cost: 10890
+
+ejemplar_prueba_69.txt --> solution_cost: 9056 acceptable cost: 9014
+
+ejemplar_prueba_55.txt --> solution_cost: 9288 acceptable cost: 9288
+
+ejemplar_calibrado_12.txt --> solution_cost: 11364 acceptable cost: 11338
+
+ejemplar_prueba_41.txt --> solution_cost: 12282 acceptable cost: 11460
+
+ejemplar_prueba_96.txt --> solution_cost: 8734 acceptable cost: 7920
+
+ejemplar_prueba_82.txt --> solution_cost: 9670 acceptable cost: 9336
+
+ejemplar_prueba_94.txt --> solution_cost: 11228 acceptable cost: 11098
+
+ejemplar_prueba_80.txt --> solution_cost: 10908 acceptable cost: 10916
+
+ejemplar_prueba_57.txt --> solution_cost: 12312 acceptable cost: 11982
+
+ejemplar_prueba_43.txt --> solution_cost: 9614 acceptable cost: 9444
+
+ejemplar_calibrado_10.txt --> solution_cost: 11940 acceptable cost: 11918
+
+ejemplar_calibrado_38.txt --> solution_cost: 11460 acceptable cost: 11066
+
+ejemplar_calibrado_39.txt --> solution_cost: 9800 acceptable cost: 9872
+
+ejemplar_prueba_42.txt --> solution_cost: 11070 acceptable cost: 11010
+
+ejemplar_calibrado_11.txt --> solution_cost: 12352 acceptable cost: 11592
+
+ejemplar_prueba_56.txt --> solution_cost: 8710 acceptable cost: 8710
+
+ejemplar_prueba_81.txt --> solution_cost: 13296 acceptable cost: 13112
+
+ejemplar_prueba_95.txt --> solution_cost: 10450 acceptable cost: 10572
+
+ejemplar_calibrado_89.txt --> solution_cost: 10604 acceptable cost: 10132
+
+data/Exemplars/data/ejemplar_prueba_19.txt
+Los pacientes son intervenidos en quirofanos adecuados a sus tipos de intervenciones: OK
+No hay solapamientos de pacientes en un mismo quirofano: OK
+No hay solapamientos de limpiezas e intervenciones en un mismo quirofano: OK
+Las intervenciones quirurgicas se realizan dentro del horario permitido: OK
+Se respeta el tiempo de reanimacion en una box de URPA: OK
+No se sobrepasa el tiempo maximo de espera en una box de URPA: OK
+Las recuperaciones en las habitaciones de UCE se realizan dentro del horario permitido: OK
+No se exceden las capacidades de las habitaciones de UCE: OK
+Pacientes de sexos diferentes no comparten habitacion de UCE: OK
+Valor de la solucion dado 10304 es igual a 10304 (100*48 + 10*320 + 1*2304): OK
+Se respeta el tiempo maximo de resolucion: INCORRECT
+ejemplar_prueba_19.txt --> solution_cost: 10304 acceptable cost: 10606
+
+ejemplar_calibrado_62.txt --> solution_cost: 12600 acceptable cost: 12252
+
+ejemplar_prueba_31.txt --> solution_cost: 8078 acceptable cost: 8078
+
+ejemplar_prueba_25.txt --> solution_cost: 7028 acceptable cost: 7298
+
+ejemplar_calibrado_76.txt --> solution_cost: 12336 acceptable cost: 11748
+
+ejemplar_prueba_24.txt --> solution_cost: 11126 acceptable cost: 10696
+
+ejemplar_calibrado_77.txt --> solution_cost: 11874 acceptable cost: 11132
+
+ejemplar_calibrado_63.txt --> solution_cost: 14578 acceptable cost: 14154
+
+ejemplar_prueba_30.txt --> solution_cost: 12888 acceptable cost: 12174
+
+ejemplar_prueba_18.txt --> solution_cost: 13794 acceptable cost: 13258
+
+ejemplar_calibrado_88.txt --> solution_cost: 10140 acceptable cost: 9872
+
+ejemplar_calibrado_49.txt --> solution_cost: 11576 acceptable cost: 11550
+
+ejemplar_calibrado_75.txt --> solution_cost: 10912 acceptable cost: 10964
+
+ejemplar_prueba_26.txt --> solution_cost: 9836 acceptable cost: 9682
+
+ejemplar_prueba_32.txt --> solution_cost: 12034 acceptable cost: 11368
+
+ejemplar_calibrado_61.txt --> solution_cost: 12348 acceptable cost: 11698
+
+ejemplar_prueba_33.txt --> solution_cost: 10376 acceptable cost: 9902
+
+ejemplar_calibrado_60.txt --> solution_cost: 13630 acceptable cost: 11902
+
+ejemplar_calibrado_74.txt --> solution_cost: 11230 acceptable cost: 10736
+
+ejemplar_prueba_27.txt --> solution_cost: 13216 acceptable cost: 12508
+
+ejemplar_calibrado_48.txt --> solution_cost: 10634 acceptable cost: 10352
+
+ejemplar_prueba_23.txt --> solution_cost: 9932 acceptable cost: 9820
+
+ejemplar_calibrado_70.txt --> solution_cost: 11646 acceptable cost: 10730
+
+ejemplar_calibrado_64.txt --> solution_cost: 12922 acceptable cost: 12590
+
+ejemplar_prueba_37.txt --> solution_cost: 8708 acceptable cost: 8878
+
+ejemplar_calibrado_58.txt --> solution_cost: 12478 acceptable cost: 12956
+
+ejemplar_calibrado_59.txt --> solution_cost: 9542 acceptable cost: 9220
+
+ejemplar_calibrado_65.txt --> solution_cost: 9482 acceptable cost: 9318
+
+ejemplar_prueba_36.txt --> solution_cost: 10228 acceptable cost: 9912
+
+ejemplar_prueba_22.txt --> solution_cost: 12098 acceptable cost: 11488
+
+ejemplar_calibrado_71.txt --> solution_cost: 12102 acceptable cost: 11868
+
+ejemplar_prueba_8.txt --> solution_cost: 9166 acceptable cost: 9952
+
+ejemplar_calibrado_98.txt --> solution_cost: 11648 acceptable cost: 10824
+
+ejemplar_prueba_34.txt --> solution_cost: 10404 acceptable cost: 10132
+
+ejemplar_calibrado_67.txt --> solution_cost: 9186 acceptable cost: 9296
+
+ejemplar_calibrado_73.txt --> solution_cost: 10850 acceptable cost: 10438
+
+ejemplar_prueba_20.txt --> solution_cost: 11940 acceptable cost: 11820
+
+ejemplar_calibrado_100.txt --> solution_cost: 10208 acceptable cost: 9904
+ejemplar_calibrado_72.txt --> solution_cost: 11336 acceptable cost: 10898
+
+ejemplar_prueba_21.txt --> solution_cost: 12270 acceptable cost: 11160
+
+ejemplar_prueba_35.txt --> solution_cost: 9918 acceptable cost: 9666
+
+ejemplar_calibrado_66.txt --> solution_cost: 9502 acceptable cost: 10014
+
+ejemplar_prueba_9.txt --> solution_cost: 8834 acceptable cost: 8834
+
+ejemplar_calibrado_99.txt --> solution_cost: 13576 acceptable cost: 12218
