@@ -18,4 +18,5 @@ class UceRoom(Id):
 
     @sex.setter
     def sex(self, sex: int) -> None:
-        self._sex = sex
+        if self._sex == 0:
+            self._sex = sex

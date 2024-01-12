@@ -7,7 +7,7 @@ from ..elements.uce_room import UceRoom
 from ..heuristics import HeuristicBase
 from ..instance.instance import _UCE_ROOMS_, Instance
 from .assignment import Assignment
-from .criterion import Criterion, MaxTime
+from .criterion import Criterion, MaxTime, MinTime, MinWhiteSpaces
 
 WEIGHT_OBJECTIVE_1 = 100
 WEIGHT_OBJECTIVE_2 = 10
@@ -78,17 +78,26 @@ class Solution:
     def find_solution(self, heuristic: HeuristicBase) -> List[Patient]:
         operable_patients = heuristic.sort(self.instance.operable_patients())
         patients_assigned = self.assign_to_end(operable_patients)
+        patients_assigned = self.assign_to_beginning(operable_patients, patients_assigned)
         self.default_assignment(operable_patients, patients_assigned)
         return operable_patients
+
+    def assign_to_beginning(self, patients_list: List[Patient], patients_assigned: Set[Patient]) -> Set[Patient]:
+        num_assignments = 0
+        for patient in patients_list:
+            if self.assign_patient(patient, MinTime(14)):
+                num_assignments += 1
+                patients_assigned.add(patient)
+                if num_assignments == _UCE_ROOMS_ * 2:
+                    return patients_assigned
+        return patients_assigned
 
     def assign_to_end(self, patients_list: List[Patient]) -> Set[Patient]:
         num_assignments = 0
         patients_assigned: Set[Patient] = set()
-        for relaxation in [72, 60, 48, 36, 24]:
+        for minimum_end_time in [156, 144]:
             for patient in patients_list:
-                if patient.surgical_type.uce_time != relaxation:
-                    continue
-                if self.assign_patient(patient, MaxTime()):
+                if self.assign_patient(patient, MaxTime(minimum_end_time)):
                     num_assignments += 1
                     patients_assigned.add(patient)
                     if num_assignments == _UCE_ROOMS_ * 2:
@@ -99,8 +108,7 @@ class Solution:
         for patient in patients_list:
             if patient in patients_assigned:
                 continue
-            criterion = MaxTime()
-            criterion.minimum_time = 0
+            criterion = MinWhiteSpaces()
             self.assign_patient(patient, criterion)
 
     def assign_patient(self, patient: Patient, criterion: Criterion) -> bool:
@@ -143,7 +151,7 @@ class Solution:
                                 uce_room=uce,
                                 uce_start=starting_time,
                             )
-                            criterion.evaluate(new_assignment, blanks)
+                            criterion.evaluate(new_assignment, blanks, uce_interval)
 
             if criterion.best_assignment is not None:
                 criterion.best_assignment.uce_room.sex = patient.sex
