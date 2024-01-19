@@ -1,7 +1,7 @@
 from abc import abstractmethod
 
-from .assignment import Assignment
 from ..portion import Interval
+from .assignment import Assignment
 
 
 class Criterion:
@@ -33,10 +33,10 @@ class MinTime(Criterion):
     def __init__(self, maximum_starting_time: int) -> None:
         super().__init__()
         self._criterion: int = float("inf")
-        self.maximum_starting_time = maximum_starting_time
+        self.maximum_starting_time = maximum_starting_time if maximum_starting_time != 0 else float("inf")
 
     def evaluate(self, assignment: Assignment, *args, **kwargs):
-        if assignment.uce_interval.lower < self.maximum_starting_time:
+        if assignment.uce_interval.lower > self.maximum_starting_time:
             return
         if self.is_first_assignment() or self._criterion >= assignment.uce_interval.lower:
             self.update(assignment, assignment.operation_interval.lower)
@@ -56,16 +56,16 @@ class MaxTime(Criterion):
 
 
 class MinWhiteSpaces(Criterion):
-    def __init__(self) -> None:
+    def __init__(self, *args) -> None:
         super().__init__()
         self._criterion: int = float("inf")
 
-    def evaluate(self, assignment: Assignment, blanks: int, uce_interval: Interval):
+    def evaluate(self, assignment: Assignment, uce_interval: Interval):
         distance_to_start = abs(assignment.operation_interval.lower - uce_interval.lower)
-        distance_to_end = abs(assignment.operation_interval.lower - uce_interval.upper)
-        if uce_interval.lower == 12:
+        distance_to_end = abs(assignment.operation_interval.upper - uce_interval.upper)
+        if uce_interval.lower == 12 and uce_interval.upper != 156:
             blanks = distance_to_end
-        elif uce_interval.upper == 156:
+        elif uce_interval.upper == 156 and uce_interval.lower != 12:
             blanks = distance_to_start
         else:
             blanks = min(distance_to_start, distance_to_end)

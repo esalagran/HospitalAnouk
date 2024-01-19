@@ -1,4 +1,4 @@
-from typing import Dict, List, Set, Tuple
+from typing import Dict, List, Optional, Set, Tuple, Type
 
 from .. import portion as P
 from ..elements.operating_room import OperatingRoom
@@ -16,14 +16,66 @@ WEIGHT_OBJECTIVE_3 = 1
 _SEPARATOR_ = "*"
 
 
+class SolutionParameters:
+    def __init__(
+        self,
+        assign_last: bool,
+        assign_beginning: bool,
+        sort_by_maximum: bool,
+        sort_by_uce: bool,
+        criterion_type: Type[Criterion],
+    ) -> None:
+        self.assign_last = assign_last
+        self.assign_beginning = assign_beginning
+        self.sort_by_maximum = sort_by_maximum
+        self.sort_by_uce = sort_by_uce
+        self.criterion_type = criterion_type
+
+
+SOLUTION_PARAMETERS_LIST = [
+    SolutionParameters(
+        sort_by_uce=False, sort_by_maximum=False, assign_last=False, assign_beginning=False, criterion_type=MinTime
+    ),
+    SolutionParameters(
+        sort_by_uce=False, sort_by_maximum=False, assign_last=False, assign_beginning=False, criterion_type=MaxTime
+    ),
+    SolutionParameters(
+        sort_by_uce=False, sort_by_maximum=False, assign_last=False, assign_beginning=False, criterion_type=MinWhiteSpaces
+    ),
+    SolutionParameters(
+        sort_by_uce=False, sort_by_maximum=False, assign_last=False, assign_beginning=True, criterion_type=MinTime
+    ),
+    SolutionParameters(
+        sort_by_uce=True, sort_by_maximum=False, assign_last=True, assign_beginning=False, criterion_type=MaxTime
+    ),
+    SolutionParameters(
+        sort_by_uce=False, sort_by_maximum=True, assign_last=True, assign_beginning=True, criterion_type=MaxTime
+    ),
+    SolutionParameters(
+        sort_by_uce=True, sort_by_maximum=True, assign_last=True, assign_beginning=True, criterion_type=MinWhiteSpaces
+    ),
+    SolutionParameters(
+        sort_by_uce=True, sort_by_maximum=True, assign_last=True, assign_beginning=True, criterion_type=MaxTime
+    ),
+    SolutionParameters(
+        sort_by_uce=True, sort_by_maximum=True, assign_last=True, assign_beginning=True, criterion_type=MinTime
+    ),
+]
+
+
 class Solution:
-    def __init__(self, instance: Instance):
+    def __init__(self, instance: Instance, solution_parameters: Optional[SolutionParameters] = None):
         self.instance = instance
         self.assignments: List[Assignment] = []
         self.assignments_by_or: Dict[OperatingRoom, List[Assignment]] = {
             operating_room: [] for operating_room in instance.operating_rooms
         }
         self.assignments_by_ur: Dict[UceRoom, List[Assignment]] = {uce_room: [] for uce_room in instance.uce_rooms}
+        self.solution_parameters = (
+            solution_parameters
+            if solution_parameters is not None
+            else SolutionParameters(True, True, True, True, MinTime)
+        )
 
     def assign(self, assignment: Assignment) -> None:
         self.assignments.append(assignment)
@@ -83,8 +135,12 @@ class Solution:
         return operable_patients
 
     def assign_to_beginning(self, patients_list: List[Patient], patients_assigned: Set[Patient]) -> Set[Patient]:
+        if not self.solution_parameters.assign_beginning:
+            return patients_assigned
         num_assignments = 0
         for patient in patients_list:
+            if patient in patients_assigned:
+                continue
             if self.assign_patient(patient, MinTime(14)):
                 num_assignments += 1
                 patients_assigned.add(patient)
@@ -93,23 +149,31 @@ class Solution:
         return patients_assigned
 
     def assign_to_end(self, patients_list: List[Patient]) -> Set[Patient]:
+        if not self.solution_parameters.assign_last:
+            return set()
         num_assignments = 0
         patients_assigned: Set[Patient] = set()
-        for minimum_end_time in [156, 144]:
-            for patient in patients_list:
-                if self.assign_patient(patient, MaxTime(minimum_end_time)):
-                    num_assignments += 1
-                    patients_assigned.add(patient)
-                    if num_assignments == _UCE_ROOMS_ * 2:
-                        return patients_assigned
+        minimum_end_times = [156, 144] if self.solution_parameters.sort_by_maximum else [144]
+        sort_by_uce = [72, 60, 48, 36, 24] if self.solution_parameters.sort_by_uce else [0]
+        for uce_time in sort_by_uce:
+            for minimum_end_time in minimum_end_times:
+                for patient in patients_list:
+                    if patient in patients_assigned:
+                        continue
+                    if uce_time != 0 and patient.surgical_type.uce_time != uce_time:
+                        continue
+                    if self.assign_patient(patient, MaxTime(minimum_end_time)):
+                        num_assignments += 1
+                        patients_assigned.add(patient)
+                        if num_assignments == _UCE_ROOMS_ * 2:
+                            return patients_assigned
         return patients_assigned
 
     def default_assignment(self, patients_list: List[Patient], patients_assigned: Set[Patient]) -> Set[Patient]:
         for patient in patients_list:
             if patient in patients_assigned:
                 continue
-            criterion = MinWhiteSpaces()
-            self.assign_patient(patient, criterion)
+            self.assign_patient(patient, self.solution_parameters.criterion_type(0))
 
     def assign_patient(self, patient: Patient, criterion: Criterion) -> bool:
         available_ors = self.find_available_ors(patient)
@@ -137,7 +201,6 @@ class Solution:
                             starting_time,
                             starting_time + patient.surgical_type.uce_time,
                         )
-                        blanks = min(abs(starting_time - uce_interval.lower), abs(uce_interval.upper - starting_time))
                         if uce_interval.contains(patient_uce_interval):
                             operation_start = (
                                 or_interval.lower
@@ -151,7 +214,7 @@ class Solution:
                                 uce_room=uce,
                                 uce_start=starting_time,
                             )
-                            criterion.evaluate(new_assignment, blanks, uce_interval)
+                            criterion.evaluate(new_assignment, uce_interval)
 
             if criterion.best_assignment is not None:
                 criterion.best_assignment.uce_room.sex = patient.sex

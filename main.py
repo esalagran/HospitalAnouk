@@ -1,32 +1,36 @@
+import argparse
 import multiprocessing
 import random
-from datetime import datetime
+import time
 from pathlib import Path
 from typing import List, Tuple
 
 from src.elements.patient import Patient
 from src.heuristics import EvolutionaryAlgorithm, HeuristicBase, HeuristicGenerator, PredefinedOrder
 from src.instance import get_instance
-from src.solution import Result, Solution
+from src.solution import SOLUTION_PARAMETERS_LIST, Result, Solution, SolutionParameters
 from src.tester import tester
 
-FOLDER_INSTANCES = Path.cwd() / "data" / "Exemplars" / "data"
-FOLDER_RESULTS = Path.cwd() / "data" / "Exemplars" / "solutions"
 
-
-def get_best_order_par(heuristic_path: Tuple[HeuristicBase, Path]) -> Tuple[List[Patient], Solution]:
-    heuristic, path_input = heuristic_path
+def get_best_order_par(
+    heuristic_path: Tuple[HeuristicBase, Path, SolutionParameters]
+) -> Tuple[List[Patient], Solution]:
+    heuristic, path_input, solution_parameters = heuristic_path
     instance = get_instance(path_input)
-    solution = Solution(instance)
+    solution = Solution(instance, solution_parameters)
     solution_list = solution.find_solution(heuristic)
     return solution_list, solution
 
 
 def run_parallel(
-    heuristics: List[HeuristicBase], result: Result, path_input: Path, cpu_time: float
+    heuristics: List[HeuristicBase],
+    result: Result,
+    path_input: Path,
+    cpu_time: float,
+    solution_parameters: SolutionParameters,
 ) -> List[Tuple[List[Patient], float]]:
     solutions: List[Tuple[List[Patient], Solution]] = []
-    heuristics_to_process = [(heuristic, path_input) for heuristic in heuristics]
+    heuristics_to_process = [(heuristic, path_input, solution_parameters) for heuristic in heuristics]
     with multiprocessing.Pool() as pool:
         solutions = pool.map(get_best_order_par, heuristics_to_process)
 
@@ -34,33 +38,9 @@ def run_parallel(
     for list_patients, solution in solutions:
         returning_value.append((list_patients, solution.value()))
         if result.best_sol is None or result.best_sol.value() < solution.value():
-            result.add_improvement(solution.value(), (datetime.now() - cpu_time).seconds)
+            result.add_improvement(solution.value(), int((time.time() - cpu_time)))
             result.add_best(solution)
     return returning_value
-
-
-def optimize_swap_pairs(
-    patients_list: List[Patient], result: Result, path_input: Path, cpu_time: float
-) -> List[Patient]:
-    num_patients = len(patients_list)
-
-    for idx in range(num_patients):
-        for idx2 in range(idx + 1, num_patients):
-            if patients_list[idx].surgical_type.id != patients_list[idx2].surgical_type.id:
-                continue
-            if patients_list[idx].sex == patients_list[idx2].sex:
-                continue
-            new_order = patients_list.copy()
-            new_order[idx], new_order[idx2] = new_order[idx2], new_order[idx]
-            _, solution = get_best_order_par((PredefinedOrder(new_order), path_input))
-            if result.best_sol is None or result.best_sol.value() < solution.value():
-                result.add_improvement(solution.value(), (datetime.now() - cpu_time).seconds)
-                result.add_best(solution)
-                print(solution.value())
-                patients_list = new_order
-            else:
-                assert patients_list != new_order
-    return patients_list
 
 
 def get_best_order(
@@ -70,60 +50,47 @@ def get_best_order(
     solution = Solution(instance)
     solution_list = solution.find_solution(heuristic)
     if result.best_sol is None or result.best_sol.value() < solution.value():
-        result.add_improvement(solution.value(), (datetime.now() - cpu_time).seconds)
+        result.add_improvement(solution.value(), int(time.time() - cpu_time))
         result.add_best(solution)
         print(solution.value())
     return solution_list, solution.value()
 
 
 def find_result(path_input: Path, path_output: Path) -> Tuple[float, float]:
-    cpu_time = datetime.now()
+    cpu_time = time.time()
     result = Result()
     random.seed(0)
 
-    patients_list: List[Tuple[List[Patient], float]] = run_parallel(
-        HeuristicGenerator().get_heuristics(), result, path_input, cpu_time
-    )
-    # patients_orders, fitness = [list(x) for x in zip(*patients_list)]
-    # elite_index = max(range(len(fitness)), key=fitness.__getitem__)
-    # best_result_so_far = optimize_swap_pairs(patients_orders[elite_index].copy(), result, path_input, cpu_time)
-    # patients_list.append((best_result_so_far, result.best_sol.value()))
-    # with tqdm(total=15) as progress_bar:
-    while (datetime.now() - cpu_time).seconds < 60 * 3:
+    for solution_parameters in SOLUTION_PARAMETERS_LIST:
+        patients_list: List[Tuple[List[Patient], float]] = run_parallel(
+            HeuristicGenerator().get_heuristics_without_random(), result, path_input, cpu_time, solution_parameters
+        )
+
+    while time.time() - cpu_time < 60 * 4:
         optimization = EvolutionaryAlgorithm(patients_list)
         algorithms_list = [PredefinedOrder(child) for child in optimization.get_population()]
-        patients_list = run_parallel(algorithms_list, result, path_input, cpu_time)
+        patients_list = run_parallel(algorithms_list, result, path_input, cpu_time, result.best_sol.solution_parameters)
         patients_list.append((optimization.get_best_exemplar()))
-        # progress_bar.set_postfix_str(optimization.get_data_progress_bar())
-        # progress_bar.update(1)
+
+    visualize_or(result.best_sol.assignments_by_or)
+    visualize_ur(result.best_sol.assignments_by_ur)
 
     assert result.best_sol is not None
     with open(path_output, "w+") as f:
         f.write(str(result))
-
-    # visualize_or(result.best_sol.assignments_by_or)
-    # visualize_ur(result.best_sol.assignments_by_ur)
 
     is_correct, message = tester(path_input, path_output)
     if not is_correct:
         print(path_input)
         print(message)
 
-    return result.best_sol.value(), (datetime.now() - cpu_time).seconds
+    return result.best_sol.value(), int(time.time() - cpu_time)
 
 
 if __name__ == "__main__":
-    # path_instance = FOLDER_INSTANCES / "ejemplar_calibrado_3.txt"
-    path_instance = FOLDER_INSTANCES / "ejemplar_calibrado_94.txt"
-    # path_instance = FOLDER_INSTANCES / "ejemplar_calibrado_56.txt"
-    # path_instance = FOLDER_INSTANCES / "ejemplar_calibrado_97.txt"
-    # path_instance = FOLDER_INSTANCES / "ejemplar_calibrado_42.txt"
-    # path_instance = FOLDER_INSTANCES / "ejemplar_calibrado_68.txt"
-    # path_instance = FOLDER_INSTANCES / "ejemplar_calibrado_69.txt"
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--exemplar", required=True)
+    parser.add_argument("--solution", required=True)
 
-    # path_instance = FOLDER_INSTANCES / "ejemplar_prueba_5.txt"
-
-    # path_result = FOLDER_RESULTS / "sol_ejemplar_calibrado_3.txt"
-    path_result = FOLDER_RESULTS / "sol_ejemplar_calibrado_94.txt"
-
-    print(find_result(path_instance, path_result))
+    args = parser.parse_args()
+    print(find_result(args.exemplar, args.solution))

@@ -1,3 +1,2 @@
 from .result import Result
-from .solution import Solution
-from .visualize import visualize_or, visualize_ur
+from .solution import SOLUTION_PARAMETERS_LIST, Solution, SolutionParameters
